@@ -1,9 +1,11 @@
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { UploadFile } from "./googleDrive.js";
+import { downloadTaskerData, uploadFile } from "./googleDrive.js";
 
 env.config();
+downloadTaskerData();
+
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -29,7 +31,7 @@ export default {
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-          UploadFile(resultScriptName);
+          uploadFile(resultScriptName);
         });
       },
     },
