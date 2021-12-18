@@ -1,11 +1,10 @@
 import { testingFunc } from "./test-func";
 import { tk } from "tasker-types";
-import { locals } from "../tasker_helpers/tasker-variables";
-import { testFunc2 } from "./test-func2";
+import { GlobalDescr } from "../tasker_helpers/general-globals";
 
 //should be uncommented in case if task auto exit is turned off
-setTimeout(() => tk.exit());
+setTimeout(() => tk.exit()); //
 
 testingFunc();
-testFunc2();
-tk.flash(tk.global("BRIGHT"));
+
+tk.flash(tk.global(GlobalDescr["Bluetooth Status"]));
