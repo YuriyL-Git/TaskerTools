@@ -1,20 +1,29 @@
 import env from "dotenv";
 import path from "path";
-import { fileURLToPath } from "url";
-import { downloadTaskerData, uploadFile } from "./googleDrive.js";
+import {fileURLToPath} from "url";
+import {postBuilder} from "./post-build.js";
+import {preBuildStart} from "./pre-build.js";
 
 env.config();
-downloadTaskerData();
 
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
+preBuildStart(resultScriptName);
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   mode: "production",
   entry: "./src/index.ts",
+  optimization: {
+    minimize: false,
+    usedExports: false,
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: resultScriptName,
+    libraryTarget: "umd",
+    library: "tasker-js-runner",
+    umdNamedDefine: true,
   },
   resolve: {
     extensions: [".ts", ".js"],
@@ -31,7 +40,7 @@ export default {
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-          uploadFile(resultScriptName);
+          postBuilder(resultScriptName);
         });
       },
     },

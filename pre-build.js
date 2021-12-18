@@ -5,6 +5,7 @@ import https from "https";
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { processVariables } from "./tasker_helpers/process-variables.js";
 
 env.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -64,7 +65,7 @@ export function uploadFile(fileName) {
   processAction(upload);
 }
 
-export function downloadTaskerData() {
+export function preBuildStart(resultScriptName) {
   function download(auth) {
     const drive = google.drive({ version: "v3", auth });
     const dest = fs.createWriteStream(
@@ -104,6 +105,10 @@ export function downloadTaskerData() {
             return process.exit();
           })
           .pipe(dest);
+
+        setTimeout(() => {
+          processVariables(resultScriptName);
+        }, 1000);
       }
     );
   }

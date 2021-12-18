@@ -1,5 +1,5 @@
-import { tk } from "tasker-types";
+import { locals } from "../tasker_helpers/tasker-variables";
 
 export function testingFunc(): void {
-  tk.flash("Testing func executed");
+  locals.testing_var = "TEST";
 }
