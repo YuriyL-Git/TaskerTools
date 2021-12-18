@@ -1,9 +1,5 @@
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { uploadFile } from "./pre-build.js";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url)) + "/dist/";
 
 export function postBuilder(fileName) {
   setTimeout(async () => {
@@ -12,20 +8,19 @@ export function postBuilder(fileName) {
   }, 100);
 }
 
-async function getLocalVariables() {
+async function getLocalVariablesDeclaration() {
   function getVariableCondition(variable, variableVal) {
-    return `if (local("${variable}") == "undefined") { \n  var ${variable} = ${variableVal} \n} else { \n  ${variable} =
-     ${variableVal} \n}; \n`;
+    return `if (local("${variable}") == "undefined") { var ${variable} = ${variableVal} };`;
   }
 
-  return new Promise((resolve) => {
+  const declaredLocals = await new Promise((resolve, reject) => {
     fs.readFile(
-      "src/type-declarations/declared-locals.ts",
+      "src/variable-declarations/declared-locals.ts",
       "utf8",
       (err, data) => {
         if (err) {
-          console.error(err);
-          return;
+          errorMessage(err);
+          reject();
         }
 
         const result = data
@@ -36,7 +31,8 @@ async function getLocalVariables() {
             const variable = varData[0].trim();
             if (variable.toLowerCase() !== variable) {
               errorMessage(
-                "Local variables for tasker always should be lover case!!"
+                "Local variables for tasker always should be lover case!! \n" +
+                  `Please correct variable => ${variable}`
               );
               throw Error();
             }
@@ -48,6 +44,22 @@ async function getLocalVariables() {
       }
     );
   });
+
+  const taskerLocals = await new Promise((resolve, reject) => {
+    fs.readFile("tasker_helpers/tasker-locals.inf", "utf8", (err, data) => {
+      if (err) {
+        errorMessage(err);
+        reject();
+      }
+
+      const result = data
+        .split(" ")
+        .map((variable) => getVariableCondition(variable, '""'))
+        .join("\n");
+      resolve(result);
+    });
+  });
+  return declaredLocals + "\n" + taskerLocals;
 }
 
 async function updateBuildFile(fileName) {
@@ -70,18 +82,18 @@ async function updateBuildFile(fileName) {
 }
 
 async function getUpdatedFileData(data) {
-  const locals = await getLocalVariables();
-  let result = data.replace(/tasker_variables_1\.locals\./g, "");
+  const locals = await getLocalVariablesDeclaration();
+  let result = data.replace(/[a-zA-Z]+\.locals\./g, "");
 
   return locals + "\n" + result;
 }
 
-function errorMessage(message) {
+export function errorMessage(message) {
   console.log("\x1b[31m", message);
   console.log("\x1b[0m", "");
 }
 
-function successMessage(message) {
+export function successMessage(message) {
   console.log("\x1b[32m", message);
   console.log("\x1b[0m", "");
 }

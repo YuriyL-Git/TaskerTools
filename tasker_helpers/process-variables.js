@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import { errorMessage } from "../post-build.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -48,6 +49,13 @@ function processFile(fileData, resultScriptName) {
     .split("<Task sr=")
     .find((task) => task.includes(resultScriptName));
 
+  if (!taskData) {
+    errorMessage(
+      `Please connect script ${resultScriptName}  to required task on tasker app and restart watcher \n`
+    );
+    return;
+  }
+
   getVariables(taskData, true).forEach((variable) => {
     if (variable.toLowerCase() === variable) {
       localVars.push(variable);
@@ -55,7 +63,9 @@ function processFile(fileData, resultScriptName) {
   });
 
   const importLine =
-    'import { declaredLocals, IDeclaredLocals } from "../src/type-declarations/declared-locals";';
+    'import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals"; \n' +
+    'import {UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";\n' +
+    'import { GeneralGlobals } from "./general-globals"; \n';
 
   const localTypes =
     "export type LocalVars = \n" +
@@ -65,9 +75,11 @@ function processFile(fileData, resultScriptName) {
   const globalTypes =
     "export type GlobalVars = \n" +
     globalVars.map((globalVar) => "  | " + globalVar).join("\n") +
-    "; \n";
+    "\n  | UserDeclaredGlobals \n  | GeneralGlobals; \n";
 
+  localVars = [...localVars, "err", "errmsg", "priority", "qtime", "caller"];
   localVars = localVars.map((localVar) => localVar.replace(/"/g, ""));
+  saveLocalsToFile(localVars.join(" "));
 
   let interfaceLocals = "interface ITaskerLocals {" + "\n";
   localVars.forEach(
@@ -103,4 +115,12 @@ function processFile(fileData, resultScriptName) {
       }
     }
   );
+}
+
+function saveLocalsToFile(locals) {
+  fs.writeFile(path.resolve(__dirname, "tasker-locals.inf"), locals, (err) => {
+    if (err) {
+      return errorMessage(err);
+    }
+  });
 }

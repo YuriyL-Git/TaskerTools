@@ -1,8 +1,8 @@
 import env from "dotenv";
 import path from "path";
-import {fileURLToPath} from "url";
-import {postBuilder} from "./post-build.js";
-import {preBuildStart} from "./pre-build.js";
+import { fileURLToPath } from "url";
+import { postBuilder } from "./post-build.js";
+import { preBuildStart } from "./pre-build.js";
 
 env.config();
 
@@ -15,15 +15,11 @@ export default {
   mode: "production",
   entry: "./src/index.ts",
   optimization: {
-    minimize: false,
-    usedExports: false,
+    minimize: true,
   },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: resultScriptName,
-    libraryTarget: "umd",
-    library: "tasker-js-runner",
-    umdNamedDefine: true,
   },
   resolve: {
     extensions: [".ts", ".js"],

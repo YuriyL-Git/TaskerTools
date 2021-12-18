@@ -1,9 +1,11 @@
 import { testingFunc } from "./test-func";
 import { tk } from "tasker-types";
 import { locals } from "../tasker_helpers/tasker-variables";
+import { testFunc2 } from "./test-func2";
 
 //should be uncommented in case if task auto exit is turned off
-//setTimeout(() => tk.exit());
+setTimeout(() => tk.exit());
 
 testingFunc();
-tk.flash(locals.testing_var + "test");
+testFunc2();
+tk.flash(tk.global("BRIGHT"));

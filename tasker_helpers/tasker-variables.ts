@@ -1,7 +1,9 @@
-import { declaredLocals, IDeclaredLocals } from "../src/type-declarations/declared-locals";
+import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals"; 
+import {UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";
+import { GeneralGlobals } from "./general-globals"; 
+
 export type LocalVars = 
-  | "ted"
-  | "testing"; 
+  | "tedddi"; 
 
 export type GlobalVars = 
   | "NotificationTitle"
@@ -15,16 +17,26 @@ export type GlobalVars =
   | "Testtt"
   | "ArrayTest"
   | "JavaVat"
-  | "Array"; 
+  | "Array"
+  | UserDeclaredGlobals 
+  | GeneralGlobals; 
 
 interface ITaskerLocals {
-  ted: string; 
-  testing: string; 
+  tedddi: string; 
+  err: string; 
+  errmsg: string; 
+  priority: string; 
+  qtime: string; 
+  caller: string; 
 } 
 
 const taskerLocals: ITaskerLocals = {
-  ted: "", 
-  testing: "", 
+  tedddi: "", 
+  err: "", 
+  errmsg: "", 
+  priority: "", 
+  qtime: "", 
+  caller: "", 
 }; 
 
 export const locals: ITaskerLocals & IDeclaredLocals = { 
