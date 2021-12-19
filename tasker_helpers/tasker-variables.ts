@@ -7,17 +7,18 @@ export type LocalVars =
 
 export type GlobalVars = 
   | "NotificationTitle"
+  | "TaskerToolsHostAddress"
   | "ContinueNotification"
   | "RepeatTime"
   | "NotificStatus"
-  | "scriptPath"
-  | "matTitle"
   | "NotoficStatus"
+  | "Array"
+  | "matTitle"
   | "Notification"
-  | "Testtt"
   | "ArrayTest"
   | "JavaVat"
-  | "Array"
+  | "scriptPath"
+  | "Testtt"
   | UserDeclaredGlobals 
   | GeneralGlobals; 
 
