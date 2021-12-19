@@ -7,9 +7,20 @@ import { preBuildStart } from "./pre-build.js";
 env.config();
 
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
-preBuildStart(resultScriptName);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function waitSomeTime() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 15000);
+  });
+}
+
+await waitSomeTime();
+
+preBuildStart(resultScriptName);
 
 export default {
   mode: "production",

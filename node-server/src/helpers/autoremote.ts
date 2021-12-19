@@ -1,6 +1,6 @@
 import https from "https";
 import dotenv from "dotenv";
-import { errorMessage, successMessage } from "./messages";
+import { errorMessage } from "./messages";
 
 dotenv.config({ path: "../.env" });
 

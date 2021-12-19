@@ -1,18 +1,19 @@
 import express, { Router } from "express";
 import dotenv from "dotenv";
-import fileupload from "express-fileupload";
 import ip from "ip";
 import { getFileContent } from "./helpers/get-file-content";
 import {
   connectionRouter,
   setupConnectionToTasker,
-} from "./helpers/setup-connection";
+} from "./routes/setup-connection";
 import events from "events";
 import {
   errorMessage,
   successMessage,
   taskerMessage,
 } from "./helpers/messages";
+import { taskerConfigRouter } from "./routes/get-tasker-config";
+import { processTaskerConfig } from "./process-tasker-config/process-tasker-config";
 
 dotenv.config({ path: "../.env" });
 
@@ -24,8 +25,9 @@ const EventEmitter = events.EventEmitter;
 export const connectionEmmitter = new EventEmitter();
 
 setupConnectionToTasker(hostAddress)
-  .then(() => {
+  .then(async () => {
     successMessage("Node server connected to your tasker application");
+    await processTaskerConfig();
   })
   .catch(() => {
     errorMessage("Node server failed to connect to tasker");
@@ -34,14 +36,14 @@ setupConnectionToTasker(hostAddress)
     );
   });
 
-const app = express(); //
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(`${__dirname}/public`));
-app.use(fileupload());
 app.use(express.static("files"));
 app.use("/", connectionRouter);
+app.use("/", taskerConfigRouter);
 
 app.get("/script", async (req, res) => {
   const scriptContent = await getFileContent();

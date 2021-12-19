@@ -1,32 +1,34 @@
-import { sendAutoRemoteMessage } from "./autoremote";
+import { sendAutoRemoteMessage } from "../helpers/autoremote";
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
+import { CONNECTION_TIMEOUT } from "../helpers/constants";
 
 export const connectionRouter = Router();
 
-const CONNECTION_TIMEOUT: number = 5000;
+const connectionEvent: string = "connected";
 
 export async function setupConnectionToTasker(
   hostAddress: string
-): Promise<boolean> {
+): Promise<void> {
   return new Promise((resolve, reject) => {
     function onSuccess() {
-      resolve(true);
+      resolve();
     }
 
-    connectionEmmitter.once("connected", onSuccess);
+    connectionEmmitter.once(connectionEvent, onSuccess);
     sendAutoRemoteMessage("setupconnection", hostAddress);
 
     setTimeout(() => {
-      connectionEmmitter.off("connected", onSuccess);
-      reject(false);
+      connectionEmmitter.off(connectionEvent, onSuccess);
+      reject();
     }, CONNECTION_TIMEOUT);
   });
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {
-  if (connectionEmmitter.listenerCount("connected") > 0) {
-    connectionEmmitter.emit("connected");
+  if (connectionEmmitter.listenerCount(connectionEvent) > 0) {
+    connectionEmmitter.emit(connectionEvent);
+
     res.send("success");
   } else {
     res.send("fail");
