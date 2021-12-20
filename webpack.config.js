@@ -2,13 +2,15 @@ import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { postBuilder } from "./post-build.js";
-import { preBuildStart } from "./pre-build.js";
+import { preBuildStart, uploadFile } from "./pre-build.js";
 
 env.config();
 
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+//await uploadFile(resultScriptName);
 
 function waitSomeTime() {
   return new Promise((resolve) => {

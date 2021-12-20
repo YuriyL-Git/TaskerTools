@@ -1,0 +1,3 @@
+function updateGlobals(globals: string[]) {
+
+}

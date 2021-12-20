@@ -63,9 +63,9 @@ function processFile(fileData, resultScriptName) {
   });
 
   const importLine =
-    'import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals"; \n' +
-    'import {UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";\n' +
-    'import { GeneralGlobals } from "./general-globals"; \n';
+    'import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals";\n' +
+    'import { UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";\n' +
+    'import { GeneralGlobals } from "./tasker-types/src/general-globals";';
 
   const localTypes =
     "export type LocalVars = \n" +

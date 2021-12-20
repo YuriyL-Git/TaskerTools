@@ -23,13 +23,13 @@ export async function processTaskerConfig(): Promise<void> {
       await waitTaskerConfig()
     ).split("\\n");
 
-    processConfigContent(configLines);
+    //processConfigContent(configLines);
   } catch (error) {
     errorMessage("Tasker config request failed with error " + error);
   }
 }
 
-function processConfigContent(configLines: string[]) {
+/*function processConfigContent(configLines: string[]) {
   function formatVar(variable: string): string {
     return variable.replace(/>%/, "").replace(/</, "");
   }
@@ -71,11 +71,11 @@ function processConfigContent(configLines: string[]) {
       const local: string = moreLocals[0].replace(/%/, '"') + '"';
       taskerData.locals.add(local);
     }
-    /*     .forEach((variable) => resultsSet.add(variable.replace(/%/, '"') + '"'));
-       // console.log();*/
+    /!*     .forEach((variable) => resultsSet.add(variable.replace(/%/, '"') + '"'));
+       // console.log();*!/
   });
   console.log(taskerData);
-}
+}*/
 
 /*function processConfigContent(configContent: string): void {
   let localVars: string[] = [];

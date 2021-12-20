@@ -1,5 +1,7 @@
-import { tk } from "tasker-types";
+import { tk } from "./tk";
+import { locals } from "../tasker_helpers/tasker-variables";
 
+/*
 fetch("http://192.168.0.101:4000/script", {
   method: "GET",
 })
@@ -10,3 +12,6 @@ fetch("http://192.168.0.101:4000/script", {
     tk.writeFile("Tasker/testscript.js", data, false);
     tk.exit();
   });
+*/
+tk.flash("testing"); ////
+locals.tedddi = "pichaaa";

@@ -4,8 +4,8 @@ import ip from "ip";
 import { getFileContent } from "./helpers/get-file-content";
 import {
   connectionRouter,
-  setupConnectionToTasker,
-} from "./routes/setup-connection";
+  refreshConnection,
+} from "./routes/refresh-connection";
 import events from "events";
 import {
   errorMessage,
@@ -13,7 +13,6 @@ import {
   taskerMessage,
 } from "./helpers/messages";
 import { taskerConfigRouter } from "./routes/get-tasker-config";
-import { processTaskerConfig } from "./process-tasker-config/process-tasker-config";
 
 dotenv.config({ path: "../.env" });
 
@@ -24,17 +23,7 @@ const hostAddress = `${ip.address()}:${PORT}`;
 const EventEmitter = events.EventEmitter;
 export const connectionEmmitter = new EventEmitter();
 
-setupConnectionToTasker(hostAddress)
-  .then(async () => {
-    successMessage("Node server connected to your tasker application");
-    await processTaskerConfig();
-  })
-  .catch(() => {
-    errorMessage("Node server failed to connect to tasker");
-    taskerMessage(
-      "Check your auto remote key(AUTO_REMOTE_KEY) in .env file and restart the server"
-    );
-  });
+refreshConnection(hostAddress, true); //
 
 const app = express();
 
