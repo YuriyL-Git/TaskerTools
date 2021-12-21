@@ -1,9 +1,7 @@
 export interface IDeclaredLocals {
-  testing_var: string;
-  traktor: string;
+    requesturl: string;
 }
 
 export const declaredLocals: IDeclaredLocals = {
-  testing_var: "",
-  traktor: "TRAKTOR",
+    requesturl: "",
 };

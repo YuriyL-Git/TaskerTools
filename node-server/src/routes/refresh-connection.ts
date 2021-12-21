@@ -45,6 +45,8 @@ export async function refreshConnection(
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {
+  console.log("CONNECTION"); //
+  console.log(req.query.response);
   if (
     connectionEmmitter.listenerCount(connectionEvent) > 0 &&
     req.query?.response === "success"

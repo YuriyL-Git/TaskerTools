@@ -1,1 +1,1 @@
-export const CONNECTION_TIMEOUT: number = 10000;
+export const CONNECTION_TIMEOUT: number = 8000;

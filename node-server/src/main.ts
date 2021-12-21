@@ -1,17 +1,11 @@
 import express, { Router } from "express";
 import dotenv from "dotenv";
 import ip from "ip";
-import { getFileContent } from "./helpers/get-file-content";
 import {
   connectionRouter,
   refreshConnection,
 } from "./routes/refresh-connection";
 import events from "events";
-import {
-  errorMessage,
-  successMessage,
-  taskerMessage,
-} from "./helpers/messages";
 import { taskerConfigRouter } from "./routes/get-tasker-config";
 
 dotenv.config({ path: "../.env" });
@@ -29,14 +23,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(express.static(`${__dirname}/public`));
 app.use(express.static("files"));
 app.use("/", connectionRouter);
 app.use("/", taskerConfigRouter);
 
-app.get("/script", async (req, res) => {
-  const scriptContent = await getFileContent();
-  res.send(scriptContent);
+app.get("/script", (req, res) => {
+  //const scriptContent = await getFileContent();
+  console.log("SUCCESS");
+  res.send("fail");
 });
 
 app.listen(PORT, hostIp, () => {

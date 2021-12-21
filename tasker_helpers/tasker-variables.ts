@@ -1,13 +1,10 @@
-import {
-  declaredLocals,
-  IDeclaredLocals,
-} from "../src/variable-declarations/declared-locals";
+import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals";
 import { UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";
 import { GeneralGlobals } from "./tasker-types/src/general-globals";
+export type LocalVars = 
+  | "tedddi"; 
 
-export type LocalVars = "tedddi";
-
-export type GlobalVars =
+export type GlobalVars = 
   | "NotificationTitle"
   | "TaskerToolsHostAddress"
   | "ContinueNotification"
@@ -17,28 +14,28 @@ export type GlobalVars =
   | "Notification"
   | "scriptPath"
   | "matTitle"
-  | UserDeclaredGlobals
-  | GeneralGlobals;
+  | UserDeclaredGlobals 
+  | GeneralGlobals; 
 
 interface ITaskerLocals {
-  tedddi: string;
-  err: string;
-  errmsg: string;
-  priority: string;
-  qtime: string;
-  caller: string;
-}
+  tedddi: string; 
+  err: string; 
+  errmsg: string; 
+  priority: string; 
+  qtime: string; 
+  caller: string; 
+} 
 
 const taskerLocals: ITaskerLocals = {
-  tedddi: "",
-  err: "",
-  errmsg: "",
-  priority: "",
-  qtime: "",
-  caller: "",
-};
+  tedddi: "", 
+  err: "", 
+  errmsg: "", 
+  priority: "", 
+  qtime: "", 
+  caller: "", 
+}; 
 
-export const locals: ITaskerLocals & IDeclaredLocals = {
-  ...taskerLocals,
-  ...declaredLocals,
-};
+export const locals: ITaskerLocals & IDeclaredLocals = { 
+...taskerLocals, 
+...declaredLocals, 
+}; 

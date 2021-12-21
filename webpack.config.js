@@ -3,24 +3,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { postBuilder } from "./post-build.js";
 import { preBuildStart, uploadFile } from "./pre-build.js";
+import { waitNodeServerResponse } from "./webpack-helpers/wait-node-response.js";
+
+await waitNodeServerResponse();
 
 env.config();
-
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 //await uploadFile(resultScriptName);
-
-function waitSomeTime() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 15000);
-  });
-}
-
-await waitSomeTime();
 
 preBuildStart(resultScriptName);
 
