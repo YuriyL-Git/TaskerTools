@@ -16,13 +16,13 @@ export async function refreshConnection(
 ): Promise<void> {
   let isConnectionSuccessFull = false;
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     function onSuccess() {
       if (isFirstStart) {
         successMessage("Node server connected to your tasker application");
       }
       isConnectionSuccessFull = true;
-      resolve("");
+      resolve();
     }
 
     connectionEmmitter.once(connectionEvent, onSuccess);
