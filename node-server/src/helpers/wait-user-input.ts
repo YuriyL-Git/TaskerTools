@@ -1,19 +1,28 @@
 import readline from "readline";
-import { taskerMessage } from "./messages";
+import { errorMessage, taskerMessage } from "./messages";
 
-export function waitUserInput(message: string): Promise<string> {
-  console.log();
+export async function waitUserInput(
+  testFunc: (answer: string) => boolean
+): Promise<string> {
+  let readLine: readline.Interface | null = null;
+  let answer: string = "";
+  let isCorrectAns: boolean = false;
 
-  taskerMessage(message);
+  do {
+    readLine = readline.createInterface({
+      input: process.stdin,
+    });
+    answer = await new Promise((resolve) =>
+      readLine?.question("", (ans) => {
+        readLine?.close();
+        resolve(ans.trim());
+      })
+    );
 
-  const readLine = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  return new Promise((resolve) =>
-    readLine.question("", (ans) => {
-      readLine.close();
-      resolve(ans.trim());
-    })
-  );
+    isCorrectAns = testFunc(answer);
+    if (!isCorrectAns) {
+      errorMessage("Please enter correct value");
+    }
+  } while (!isCorrectAns);
+  return answer;
 }

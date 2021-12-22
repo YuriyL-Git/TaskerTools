@@ -17,7 +17,7 @@ const hostAddress = `${ip.address()}:${PORT}`;
 const EventEmitter = events.EventEmitter;
 export const connectionEmmitter = new EventEmitter();
 
-refreshConnection(hostAddress, true); //
+refreshConnection(hostAddress, true);
 
 const app = express();
 

@@ -1,12 +1,14 @@
 import dotenv from "dotenv";
 import { waitUserInput } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
+import { highlightMessage, taskerMessage } from "../helpers/messages";
 
 dotenv.config({ path: "../.env" });
 
 const savedTaskName: string = (process.env.TASK_NAME || "")
   .toUpperCase()
   .trim();
+const savedScriptName: string = (process.env.SCRIPT_FILE_NAME || "").trim();
 
 interface TaskerData {
   response: string;
@@ -24,22 +26,10 @@ export async function processTaskerResponse(
     .map((global) => global.replace("%", ""));
 
   printTasksList(tasks);
-  const userAnswer: string = await waitUserInput(
-    "Please enter the number of task to continue with or press enter to continue with selected task"
-  );
-  if (userAnswer === "") {
-    console.log("EMPTY ANSWER");
-  } else {
-    console.log("userAnswer", userAnswer);
-    const taskNumber: number = Number(userAnswer);
-    if (
-      Number.isInteger(taskNumber) &&
-      taskNumber <= tasks.length &&
-      taskNumber > 0
-    ) {
-      updateEnv("TASK_NAME", tasks[taskNumber - 1]);
-    }
-  }
+
+  await processTaskNumberInput(tasks);
+  await processScriptNameInput();
+  console.log("SUCCESS");
 }
 
 function printTasksList(tasks: string[]): void {
@@ -62,4 +52,48 @@ function printTasksList(tasks: string[]): void {
       console.log("\x1b[0m", taskToPrint);
     }
   });
+}
+
+async function processTaskNumberInput(tasks: string[]): Promise<void> {
+  console.log();
+  taskerMessage(
+    "Please enter the number of task or press enter to continue with selected task"
+  );
+  const taskNumberAnswer: string = await waitUserInput(
+    (ans: string): boolean => {
+      const taskNumber: number = Number(ans);
+      return (
+        (Number.isInteger(taskNumber) &&
+          taskNumber <= tasks.length &&
+          taskNumber > 0) ||
+        ans === ""
+      );
+    }
+  );
+
+  const taskNumber: number = Number(taskNumberAnswer);
+  if (taskNumber > 0) {
+    updateEnv("TASK_NAME", tasks[taskNumber - 1]);
+  }
+}
+
+async function processScriptNameInput(): Promise<void> {
+  console.log();
+  taskerMessage(
+    "Please enter desired script name or press enter to continue with script name -> ",
+    false
+  );
+  highlightMessage(savedScriptName, true);
+  let scriptNameAnswer: string = await waitUserInput((ans: string): boolean => {
+    return (
+      (savedScriptName.length > 0 && ans.length === 0) ||
+      (ans.endsWith(".js") && ans.length > 3)
+    );
+  });
+
+  if (scriptNameAnswer.length === 0) {
+    scriptNameAnswer = savedScriptName;
+  }
+
+  updateEnv("SCRIPT_FILE_NAME", scriptNameAnswer);
 }
