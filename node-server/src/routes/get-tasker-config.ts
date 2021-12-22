@@ -2,6 +2,7 @@ import { Router } from "express";
 import events from "events";
 import { sendAutoRemoteMessage } from "../helpers/autoremote";
 import { CONNECTION_TIMEOUT } from "../helpers/constants";
+import { errorMessage } from "../helpers/messages";
 
 export const taskerConfigRouter = Router();
 
@@ -12,17 +13,22 @@ const configReceivedEvent: string = "configreceived";
 let configContent: string = "";
 
 export async function waitTaskerConfig(): Promise<string> {
+  let isSuccess: boolean = false;
   return new Promise((resolve, reject) => {
     function onSuccess() {
-      resolve(configContent);
+      isSuccess = true;
+      resolve(JSON.stringify(configContent));
     }
 
     configReceivedEmmiter.once(configReceivedEvent, onSuccess);
     sendAutoRemoteMessage("gettaskerconfig", "");
 
     setTimeout(() => {
-      configReceivedEmmiter.off(configReceivedEvent, onSuccess);
-      reject();
+      if (!isSuccess) {
+        configReceivedEmmiter.off(configReceivedEvent, onSuccess);
+        errorMessage("Tasker config request failed");
+        reject();
+      }
     }, CONNECTION_TIMEOUT);
   });
 }

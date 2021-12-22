@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { waitUserInput } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
 import { highlightMessage, taskerMessage } from "../helpers/messages";
+import { waitTaskerConfig } from "../routes/get-tasker-config";
 
 dotenv.config({ path: "../.env" });
 
@@ -16,30 +17,27 @@ interface TaskerData {
   tasks: string;
 }
 
-export async function processTaskerResponse(
-  taskerResponse: string
-): Promise<void> {
+export async function processInputData(taskerResponse: string): Promise<void> {
   const taskerData: TaskerData = JSON.parse(taskerResponse) as TaskerData;
   const tasks: string[] = taskerData.tasks.split(",");
   const globals: string[] = taskerData.globals
     .split(",")
     .map((global) => global.replace("%", ""));
 
-  printTasksList(tasks);
-
-  await processTaskNumberInput(tasks);
-  await processScriptNameInput();
-  console.log("SUCCESS");
+  const savedTaskNumber: number = getSavedTaskNumber(tasks);
+  printTasksList(tasks, savedTaskNumber);
+  const currTaskName: string = await processTaskNameUserInput(
+    tasks,
+    savedTaskNumber
+  );
+  await processScriptNameUserInput();
+  const configData: string = await waitTaskerConfig();
+  getLocals(configData, currTaskName);
+  //const localsSection;
+  //console.log(configData);
 }
 
-function printTasksList(tasks: string[]): void {
-  let savedTaskIndex: number = tasks
-    .map((task) => task.toUpperCase())
-    .indexOf(savedTaskName);
-  if (savedTaskIndex === -1) {
-    savedTaskIndex = 0;
-  }
-
+function printTasksList(tasks: string[], savedTaskIndex: number): void {
   tasks.forEach((task, index) => {
     const spacesNumber: number =
       Math.floor(tasks.length / 10) - Math.floor((index + 1) / 10);
@@ -54,10 +52,24 @@ function printTasksList(tasks: string[]): void {
   });
 }
 
-async function processTaskNumberInput(tasks: string[]): Promise<void> {
+function getSavedTaskNumber(tasks: string[]): number {
+  let savedTaskNumber: number = tasks
+    .map((task) => task.toUpperCase())
+    .indexOf(savedTaskName);
+  if (savedTaskNumber === -1) {
+    savedTaskNumber = 0;
+  }
+  return savedTaskNumber;
+}
+
+async function processTaskNameUserInput(
+  tasks: string[],
+  savedTaskNumber: number
+): Promise<string> {
   console.log();
   taskerMessage(
-    "Please enter the number of task or press enter to continue with selected task"
+    "Please enter the number of task or press enter to continue with selected task",
+    false
   );
   const taskNumberAnswer: string = await waitUserInput(
     (ans: string): boolean => {
@@ -71,19 +83,24 @@ async function processTaskNumberInput(tasks: string[]): Promise<void> {
     }
   );
 
+  let currTaskName: string = tasks[savedTaskNumber];
+
   const taskNumber: number = Number(taskNumberAnswer);
   if (taskNumber > 0) {
-    updateEnv("TASK_NAME", tasks[taskNumber - 1]);
+    currTaskName = tasks[taskNumber - 1];
+    updateEnv("TASK_NAME", currTaskName);
   }
+  return currTaskName;
 }
 
-async function processScriptNameInput(): Promise<void> {
-  console.log();
-  taskerMessage(
+async function processScriptNameUserInput(): Promise<void> {
+  console.log(
+    "\x1b[34m",
     "Please enter desired script name or press enter to continue with script name -> ",
-    false
+    "\x1b[33m",
+    savedScriptName,
+    "\x1b[0m"
   );
-  highlightMessage(savedScriptName, true);
   let scriptNameAnswer: string = await waitUserInput((ans: string): boolean => {
     return (
       (savedScriptName.length > 0 && ans.length === 0) ||
@@ -96,4 +113,18 @@ async function processScriptNameInput(): Promise<void> {
   }
 
   updateEnv("SCRIPT_FILE_NAME", scriptNameAnswer);
+}
+
+//
+function getLocals(configData: string, taskName: string) {
+  const sectionRegex: RegExp = new RegExp(
+    `<nme>${taskName}<\/nme>(.*?)<\/Task>`
+  );
+  const [localsSection = null] = configData.match(sectionRegex) || [];
+  //console.log(localsSection);
+  const locals: string[] = localsSection?.match(/%[a-z_]+/g) || [];
+
+  console.log(locals);
+
+  // console.log("LOCALS", localsSection);
 }

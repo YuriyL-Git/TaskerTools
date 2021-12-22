@@ -3,7 +3,7 @@ import { connectionEmmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../helpers/constants";
 import { errorMessage, successMessage } from "../helpers/messages";
-import { processTaskerResponse } from "../process-data/process-tasker-response";
+import { processInputData } from "../process-data/process-input-data";
 
 export const connectionRouter = Router();
 
@@ -40,8 +40,8 @@ export async function refreshConnection(
     }, CONNECTION_TIMEOUT);
   });
 
-  await processTaskerResponse(taskerDataResponse);
-  // await processTaskerConfig();
+  await processInputData(taskerDataResponse);
+  // await processTaskerConfig();////
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {

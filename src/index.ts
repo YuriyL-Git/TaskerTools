@@ -1,15 +1,12 @@
 import { tk } from "./tk";
 import { locals } from "../tasker_helpers/tasker-variables";
 
-/*
-tk.flash("testingg"); ////
-tk.exit(); //
-*/
+const data = new FormData();
+data.append("file", locals.taskerdata);
 
-/*
-fetch("192.168.0.101:4000/setupconnection", {
-  method: "GET",
-}).then((response) => {
+fetch(locals.getconfigurl, {
+  method: "POST",
+  body: data,
+}).then(() => {
   tk.exit();
-});ns
-*/
+});

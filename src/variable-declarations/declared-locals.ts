@@ -1,7 +1,9 @@
 export interface IDeclaredLocals {
-    requesturl: string;
+  getconfigurl: string;
+  taskerdata: string;
 }
 
 export const declaredLocals: IDeclaredLocals = {
-    requesturl: "",
+  getconfigurl: "",
+  taskerdata: "",
 };

@@ -5,7 +5,7 @@ import { postBuilder } from "./post-build.js";
 import { preBuildStart, uploadFile } from "./pre-build.js";
 import { waitNodeServerResponse } from "./webpack-helpers/wait-node-response.js";
 
-await waitNodeServerResponse();
+//await waitNodeServerResponse();
 
 env.config();
 const resultScriptName = process.env.SCRIPT_FILE_NAME;

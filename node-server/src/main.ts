@@ -1,4 +1,7 @@
 import express, { Router } from "express";
+import bodyParser from "body-parser";
+import fileupload from "express-fileupload";
+
 import dotenv from "dotenv";
 import ip from "ip";
 import {
@@ -20,15 +23,18 @@ export const connectionEmmitter = new EventEmitter();
 refreshConnection(hostAddress, true);
 
 const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded());
 app.use(express.static("files"));
+app.use(fileupload());
+app.use(
+  bodyParser.urlencoded({
+    limit: "10mb",
+    extended: false,
+  })
+);
 app.use("/", connectionRouter);
 app.use("/", taskerConfigRouter);
 
 app.get("/script", (req, res) => {
-  //const scriptContent = await getFileContent();
   console.log("SUCCESS");
   res.send("fail");
 });
