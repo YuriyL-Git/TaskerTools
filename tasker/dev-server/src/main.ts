@@ -1,14 +1,14 @@
-import express, { Router } from "express";
+import ip from "ip";
+import dotenv from "dotenv";
+import events from "events";
+import express from "express";
 import bodyParser from "body-parser";
 import fileupload from "express-fileupload";
-import dotenv from "dotenv";
-import ip from "ip";
+import { taskerConfigRouter } from "./routes/get-tasker-config";
 import {
   connectionRouter,
-  refreshConnection,
+  refreshConnectionAsync,
 } from "./routes/refresh-connection";
-import events from "events";
-import { taskerConfigRouter } from "./routes/get-tasker-config";
 
 dotenv.config({ path: "../.env" });
 
@@ -19,14 +19,14 @@ const hostAddress = `${ip.address()}:${PORT}`;
 const EventEmitter = events.EventEmitter;
 export const connectionEmmitter = new EventEmitter();
 
-refreshConnection(hostAddress, true); //
+refreshConnectionAsync(hostAddress, true);
 
 const app = express();
 app.use(express.static("files"));
 app.use(fileupload());
 app.use(
   bodyParser.urlencoded({
-    limit: "10mb",
+    limit: "20mb",
     extended: false,
   })
 );

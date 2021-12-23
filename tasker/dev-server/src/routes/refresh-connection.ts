@@ -1,16 +1,19 @@
-import { sendMessageToTasker, setupConnection } from "../helpers/autoremote";
+import {
+  sendMessageToTasker,
+  setupConnection,
+} from "../message-sender/message-sender";
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage, successMessage } from "../helpers/messages";
-import { processInputData } from "../process-data/process-input-data";
+import { processInputDataAsync } from "../process-data/process-input-data";
 
 export const connectionRouter = Router();
 
 const connectionEvent: string = "connected";
 let taskerDataResponse: string = "";
 
-export async function refreshConnection(
+export async function refreshConnectionAsync(
   hostAddress: string,
   isFirstStart = false
 ): Promise<void> {
@@ -44,7 +47,7 @@ export async function refreshConnection(
     }, CONNECTION_TIMEOUT);
   });
 
-  await processInputData(taskerDataResponse);
+  await processInputDataAsync(taskerDataResponse);
   // await processTaskerConfig();////
 }
 

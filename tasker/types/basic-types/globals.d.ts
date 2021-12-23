@@ -1,4 +1,4 @@
-import { CustomGlobals } from "../custom-types";
+import { CustomGlobals } from "../custom-types/custom-types";
 
 export type Globals =
   | "AIR"

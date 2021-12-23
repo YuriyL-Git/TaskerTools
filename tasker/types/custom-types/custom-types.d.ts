@@ -1,6 +1,6 @@
-import { DeclaredGlobals } from "../../../src/declarations/declared-vars";
+import { GlobalsDeclaration } from "declarations";
 
-export type LocalArrays = "tedddi";
+export type LocalArrays = "tedddi()";
 
 export type CustomGlobals =
   | "NotificationTitle"
@@ -12,9 +12,9 @@ export type CustomGlobals =
   | "Notification"
   | "scriptPath"
   | "matTitle"
-  | DeclaredGlobals;
+  | GlobalsDeclaration;
 
-interface ITaskerLocals {
+export interface ITaskerLocals {
   tedddi: string;
   err: string;
   errmsg: string;
@@ -22,19 +22,3 @@ interface ITaskerLocals {
   qtime: string;
   caller: string;
 }
-
-/*
-const taskerLocals: ITaskerLocals = {
-  tedddi: "",
-  err: "",
-  errmsg: "",
-  priority: "",
-  qtime: "",
-  caller: "",
-};
-
-export const locals: ITaskerLocals & IDeclaredLocals = {
-  ...taskerLocals,
-  ...declaredLocals,
-};
-*/
