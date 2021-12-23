@@ -1,4 +1,4 @@
-import { sendAutoRemoteMessage } from "../helpers/autoremote";
+import { sendMessageToTasker, setupConnection } from "../helpers/autoremote";
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
@@ -25,8 +25,12 @@ export async function refreshConnection(
       resolve();
     }
 
+    ///
     connectionEmmitter.once(connectionEvent, onSuccess);
-    sendAutoRemoteMessage("setupconnection", hostAddress);
+    // sendAutoRemoteMessage("setupconnection", hostAddress);
+    //sendMessageToTasker("hostaddress", hostAddress);
+    setupConnection(hostAddress);
+    console.log("CONNECTION_TIMEOUT", CONNECTION_TIMEOUT);
 
     setTimeout(() => {
       if (!isConnectionSuccessFull) {
