@@ -1,16 +1,26 @@
-// Type Definitions for Tasker Javascipt(let)
-// https://tasker.joaoapps.com/userguide/en/javascript.html
+import {Globals} from "./globals";
 
-// Types for parameters that only accept certain constants
-import { GlobalVars, LocalVars } from '../../tasker-variables';
-
-export type tkAudioStream = "call" | "system" | "ringer" | "media" | "alarm" | "notification";
+export type tkAudioStream =
+    | "call"
+    | "system"
+    | "ringer"
+    | "media"
+    | "alarm"
+    | "notification";
 export type tkAudioRecordSource = "def" | "mic" | "call" | "callout" | "callin";
 export type tkAudioRecordCodec = "amrn" | "amrw" | "aac";
 export type tkAudioRecordFormat = "mp4" | "3gpp" | "amrn" | "amrw";
-export type tkButtonNames = "back" | "call" | "camera" | "endcall" | "menu" | "volup" | "voldown" | "search";
+export type tkButtonNames =
+    | "back"
+    | "call"
+    | "camera"
+    | "endcall"
+    | "menu"
+    | "volup"
+    | "voldown"
+    | "search";
 export type tkConversionType =
-    "byteToKbyte"
+    | "byteToKbyte"
     | "byteToMbyte"
     | "byteToGbyte"
     | "datetimeToSec"
@@ -43,16 +53,28 @@ export type tkConversionType =
 export type tkDirection = "up" | "down" | "left" | "right" | "press";
 export type tkOrientation = "port" | "land";
 export type tkTextReplace = "repl" | "start" | "end";
-export type tkColourFilter = "bw" | "eblue" | "egreen" | "ered" | "grey" | "alpha";
+export type tkColourFilter =
+    | "bw"
+    | "eblue"
+    | "egreen"
+    | "ered"
+    | "grey"
+    | "alpha";
 export type tkLocationMode = "gps" | "net" | "any";
 export type tkLanguageModel = "web" | "free";
-export type tkMediaAction = "next" | "pause" | "prev" | "toggle" | "stop" | "play";
+export type tkMediaAction =
+    | "next"
+    | "pause"
+    | "prev"
+    | "toggle"
+    | "stop"
+    | "play";
 export type tkRebootMode = "normal" | "recovery" | "bootloader";
 export type tkRotationDirection = "left" | "right";
 export type tkRotationDegrees = 45 | 90 | 135 | 180;
 export type tkIntentAction = "receiver" | "activity" | "service";
 export type tkIntentCategory =
-    "none"
+    | "none"
     | "alt"
     | "browsable"
     | "cardock"
@@ -64,7 +86,7 @@ export type tkIntentCategory =
     | "tab"
     | "test";
 export type tkSettingsScreen =
-    "all"
+    | "all"
     | "accessibility"
     | "addacount"
     | "airplanemode"
@@ -95,7 +117,7 @@ export type tkSettingsScreen =
     | "wifiip"
     | "wireless";
 export type tkDisplayAs =
-    "Overlay"
+    | "Overlay"
     | "OverBlocking"
     | "OverBlockFullDisplay"
     | "Dialog"
@@ -109,7 +131,7 @@ export type tkStayOnMode = "never" | "ac" | "usb" | "any";
 export type tkCamera = 0 | 1;
 
 // Interface with type definitions for Tasker functions
-interface TK {
+export interface TK {
     /**
      * Set alarm volume
      * @param level Set the relevant system volume to *level*. (0-7)
@@ -186,7 +208,12 @@ interface TK {
      * @param codec one of **amrn**, **amrw** or **aac**
      * @param format one of **mp4**, **3gpp**, **amrn** or **amrw**
      */
-    audioRecord(destPath: string, source: tkAudioRecordSource, codec: tkAudioRecordCodec, format: tkAudioRecordFormat): boolean;
+    audioRecord(
+        destPath: string,
+        source: tkAudioRecordSource,
+        codec: tkAudioRecordCodec,
+        format: tkAudioRecordFormat
+    ): boolean;
 
     /**
      * Stop recording previously initiated by audioRecord().
@@ -275,7 +302,12 @@ interface TK {
      * @param message MMS Body
      * @param attachmentPath Path to attachment
      */
-    composeMMS(to: string, subject: string, message: string, attachmentPath: string): boolean;
+    composeMMS(
+        to: string,
+        subject: string,
+        message: string,
+        attachmentPath: string
+    ): boolean;
 
     /**
      * Show an SMS composition dialog with any specified fields pre-filled.
@@ -326,7 +358,12 @@ interface TK {
      * @param fromTopPercent Percentage from top to crop
      * @param fromBottomPercent Percentage from bottom to crop
      */
-    cropImage(fromLeftPercent: number, fromRightPercent: number, fromTopPercent: number, fromBottomPercent: number): boolean;
+    cropImage(
+        fromLeftPercent: number,
+        fromRightPercent: number,
+        fromTopPercent: number,
+        fromBottomPercent: number
+    ): boolean;
 
     /**
      * As decryptFile(), but decrypts each file in the specified directory in turn.
@@ -438,7 +475,12 @@ interface TK {
      * @param shredOriginal If *shredOriginal* is specified, the original
      * file will be overwritten several times with random bits if encryption is successful.
      */
-    encryptDir(path: string, keyName: string, rememberKey: string, shredOriginal: boolean): boolean;
+    encryptDir(
+        path: string,
+        keyName: string,
+        rememberKey: string,
+        shredOriginal: boolean
+    ): boolean;
 
     /**
      * Set the background [colour](https://tasker.joaoapps.com/userguide/en/javascript.html#colour)
@@ -453,7 +495,12 @@ interface TK {
      * @param endColour End Colour is only relevant if the element's background
      * has a Shader specified.
      */
-    elemBackColour(scene: string, element: string, startColour: string, endColour: string): boolean;
+    elemBackColour(
+        scene: string,
+        element: string,
+        startColour: string,
+        endColour: string
+    ): boolean;
 
     /**
      * Set the border [colour](https://tasker.joaoapps.com/userguide/en/javascript.html#colour)
@@ -463,7 +510,12 @@ interface TK {
      * @param width Border width
      * @param colour Border colour
      */
-    elemBorder(scene: string, element: string, width: number, colour: string): boolean;
+    elemBorder(
+        scene: string,
+        element: string,
+        width: number,
+        colour: string
+    ): boolean;
 
     /**
      * Move an element within it's scene.
@@ -478,7 +530,14 @@ interface TK {
      * @param animMS indicates the duration of the corresponding animation in MS.
      * A zero-value indicates no animation.
      */
-    elemPosition(scene: string, element: string, orientation: tkOrientation, x: number, y: number, animMS: number): boolean;
+    elemPosition(
+        scene: string,
+        element: string,
+        orientation: tkOrientation,
+        x: number,
+        y: number,
+        animMS: number
+    ): boolean;
 
     /**
      * Set the text of the specified [scene](https://tasker.joaoapps.com/userguide/en/scenes.html) element.
@@ -491,7 +550,12 @@ interface TK {
      * (append after existing text).
      * @param text Text to set
      */
-    elemText(scene: string, element: string, position: tkTextReplace, text: string): boolean;
+    elemText(
+        scene: string,
+        element: string,
+        position: tkTextReplace,
+        text: string
+    ): boolean;
 
     /**
      * Set the text [colour](https://tasker.joaoapps.com/userguide/en/javascript.html#colour)
@@ -526,7 +590,12 @@ interface TK {
      * @param visible Show or hide
      * @param animationTimeMS Animation length (ms)
      */
-    elemVisibility(scene: string, element: string, visible: boolean, animationTimeMS: number): boolean;
+    elemVisibility(
+        scene: string,
+        element: string,
+        visible: boolean,
+        animationTimeMS: number
+    ): boolean;
 
     /**
      * Terminate the current call (if there is one).
@@ -548,7 +617,12 @@ interface TK {
      * will be overwritten several times with random bits if encryption is
      * successful.
      */
-    encryptFile(path: string, keyName: string, rememberKey: string, shredOriginal: boolean): boolean;
+    encryptFile(
+        path: string,
+        keyName: string,
+        rememberKey: string,
+        shredOriginal: boolean
+    ): boolean;
 
     /**
      * Show a dialog to enter the passphrase for the specified *keyName*.
@@ -572,7 +646,6 @@ interface TK {
         layout: string,
         timeoutSecs: number
     ): boolean;
-
 
     /**
      * Filter an image previously loaded into Tasker's image buffer via loadImage()
@@ -638,8 +711,11 @@ interface TK {
      * next time the function is called.
      * @param timeoutSecs Timeout (seconds) for action
      */
-    getLocation(source: tkLocationMode, keepTracking: boolean, timeoutSecs: number): boolean;
-
+    getLocation(
+        source: tkLocationMode,
+        keepTracking: boolean,
+        timeoutSecs: number
+    ): boolean;
 
     /**
      * Get voice input and convert to text.
@@ -649,13 +725,17 @@ interface TK {
      * **free** for 'free-form'.
      * @param timeout Timeout for action
      */
-    getVoice(prompt: string, languageModel: tkLanguageModel, timeout: number): string;
+    getVoice(
+        prompt: string,
+        languageModel: tkLanguageModel,
+        timeout: number
+    ): string;
 
     /**
      * Retrieve the value of a Tasker global variable. Prefixing the name with % is optional.
      * @param varName Global variable name
      */
-    global(varName: GlobalVars): string;
+    global(varName: Globals): string;
 
     /**
      * List all files in the specified *dirPath*.
@@ -720,7 +800,7 @@ interface TK {
      * via a WebView scene element.
      * @param varName
      */
-    local(varName: LocalVars): string;
+    local(varName: string): string;
 
     /**
      * Control media via simulation of hardware buttons.
@@ -767,7 +847,12 @@ interface TK {
      * @param stream which [audio stream](https://tasker.joaoapps.com/userguide/en/javascript.html#streams)
      * the music should be played
      */
-    musicPlay(path: string, offsetSecs?: number, loop?: boolean, stream?: tkAudioStream): boolean;
+    musicPlay(
+        path: string,
+        offsetSecs?: number,
+        loop?: boolean,
+        stream?: tkAudioStream
+    ): boolean;
 
     /**
      * Skip forwards by seconds during playback of a music file previously
@@ -820,7 +905,12 @@ interface TK {
      * @param parameterOne Parameter for task
      * @param parameterTwo Parameter for task
      */
-    performTask(taskName: string, priority: number, parameterOne: string, parameterTwo: string): boolean;
+    performTask(
+        taskName: string,
+        priority: number,
+        parameterOne: string,
+        parameterTwo: string
+    ): boolean;
 
     /**
      * Whether the named Tasker profile is currently active.
@@ -875,7 +965,11 @@ interface TK {
      * @param qualityPercent
      * @param deleteFromMemoryAfter
      */
-    saveImage(path: string, qualityPercent: number, deleteFromMemoryAfter: boolean): boolean;
+    saveImage(
+        path: string,
+        qualityPercent: number,
+        deleteFromMemoryAfter: boolean
+    ): boolean;
 
     /**
      * Cause the device to say *text* out loud.
@@ -975,7 +1069,12 @@ interface TK {
      * @param message Alarm message (optional)
      * @param confirmFlag specifies whether the app should confirm that the alarm has been set.
      */
-    setAlarm(hour: number, min: number, message: string, confirmFlag: boolean): boolean;
+    setAlarm(
+        hour: number,
+        min: number,
+        message: string,
+        confirmFlag: boolean
+    ): boolean;
 
     /**
      * Enable or disable the global auto-sync setting.
@@ -1014,7 +1113,7 @@ interface TK {
      * @param varName Global variable name
      * @param newValue New value of variable
      */
-    setGlobal(varName: GlobalVars, newValue: string): void;
+    setGlobal(varName: Globals, newValue: string): void;
 
     /**
      * Set the passphrase for the specified keyName.
@@ -1035,7 +1134,7 @@ interface TK {
      * @param varName Local variable name
      * @param newValue New value of variable
      */
-    setLocal(varName: LocalVars, newValue: string): void;
+    setLocal(varName: string, newValue: string): void;
 
     /**
      * Set the global system clipboard.
@@ -1192,7 +1291,12 @@ interface TK {
      * @param insertGallery whether to insert the resulting picture in the
      * Android Gallery application
      */
-    takePhoto(camera: tkCamera, fileName: string, resolution: string, insertGallery: boolean): boolean;
+    takePhoto(
+        camera: tkCamera,
+        fileName: string,
+        resolution: string,
+        insertGallery: boolean
+    ): boolean;
 
     /**
      * Simulate keyboard typing.
@@ -1274,6 +1378,5 @@ interface TK {
 }
 
 // Associate tk var with TK interface defined above
-declare const tk: TK;
-export { TK, tk };
-
+export declare const tk: TK;
+export * from "./globals";

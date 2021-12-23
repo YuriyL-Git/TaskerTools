@@ -1,29 +1,26 @@
-import {errorMessage} from "../helpers/messages";
-import {waitTaskerConfig} from "../routes/get-tasker-config";
+import { errorMessage } from "../helpers/messages";
+import { waitTaskerConfig } from "../routes/get-tasker-config";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 
-dotenv.config({path: "../.env"});
+dotenv.config({ path: "../.env" });
 const scriptName = process.env.SCRIPT_FILE_NAME;
 
 interface localData {
-    locals: Set<string>;
-    task: string;
+  locals: Set<string>;
+  task: string;
 }
 
 interface ITaskerData {
-    globals: Set<string>;
-    locals: Array<localData>;
+  globals: Set<string>;
+  locals: Array<localData>;
 }
 
 export async function processTaskerConfig(): Promise<void> {
-    try {
-
-
-        //processConfigContent(configLines);
-    } catch (error) {
-    }
+  try {
+    //processConfigContent(configLines);
+  } catch (error) {}
 }
 
 /*function processConfigContent(configLines: string[]) {
@@ -102,8 +99,8 @@ export async function processTaskerConfig(): Promise<void> {
   });
 
   const importLine =
-    'import { declaredLocals, IDeclaredLocals } from "../src/variable-declarations/declared-locals"; \n' +
-    'import {UserDeclaredGlobals } from "../src/variable-declarations/declared-globals";\n' +
+    'import { declaredLocals, IDeclaredLocals } from "../src/declarations/declared-locals"; \n' +
+    'import {UserDeclaredGlobals } from "../src/declarations/declared-globals";\n' +
     'import { GeneralGlobals } from "./general-globals"; \n';
 
   const localTypes =

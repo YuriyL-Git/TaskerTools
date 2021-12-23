@@ -1,4 +1,6 @@
-export type GeneralGlobals =
+import { CustomGlobals } from "../custom-types";
+
+export type Globals =
   | "AIR"
   | "AIRR"
   | "BATT"
@@ -115,7 +117,8 @@ export type GeneralGlobals =
   | "WIFI"
   | "WIMAX"
   | "WIN"
-  | GlobalDescr;
+  | GlobalDescr
+  | CustomGlobals;
 
 export const enum GlobalDescr {
   "Airplane Mode Status" = "AIR",

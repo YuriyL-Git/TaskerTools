@@ -32,7 +32,7 @@ export async function processInputData(taskerResponse: string): Promise<void> {
   );
   await processScriptNameUserInput();
   const configData: string = await waitTaskerConfig();
-  getLocals(configData, currTaskName);
+  const locals: string[] = getLocals(configData, currTaskName);
   //const localsSection;
   //console.log(configData);
 }
@@ -115,16 +115,11 @@ async function processScriptNameUserInput(): Promise<void> {
   updateEnv("SCRIPT_FILE_NAME", scriptNameAnswer);
 }
 
-//
-function getLocals(configData: string, taskName: string) {
+function getLocals(configData: string, taskName: string): string[] {
   const sectionRegex: RegExp = new RegExp(
     `<nme>${taskName}<\/nme>(.*?)<\/Task>`
   );
   const [localsSection = null] = configData.match(sectionRegex) || [];
-  //console.log(localsSection);
-  const locals: string[] = localsSection?.match(/%[a-z_]+/g) || [];
-
-  console.log(locals);
-
-  // console.log("LOCALS", localsSection);
+  const locals: string[] = localsSection?.match(/(?<=%)[a-z_]+/g) || [];
+  return Array.from(new Set(locals));
 }

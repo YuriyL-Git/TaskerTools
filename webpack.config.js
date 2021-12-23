@@ -1,11 +1,11 @@
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { postBuilder } from "./post-build.js";
-import { preBuildStart, uploadFile } from "./pre-build.js";
-import { waitNodeServerResponse } from "./webpack-helpers/wait-node-response.js";
+/*import { postBuilder } from "./post-build.js";
+import { preBuildStart, uploadFile } from "./pre-build.js";*/
+import { waitServerReady } from "./webpack-helpers/wait-node-response.js";
 
-//await waitNodeServerResponse();
+//await waitServerReady();
 
 env.config();
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 //await uploadFile(resultScriptName);
 
-preBuildStart(resultScriptName);
+//preBuildStart(resultScriptName);
 
 export default {
   mode: "production",
@@ -27,6 +27,9 @@ export default {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    alias: {
+      tasker: path.join(__dirname, "./tasker"),
+    },
   },
   module: {
     rules: [
@@ -40,7 +43,7 @@ export default {
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-          postBuilder(resultScriptName);
+          // postBuilder(resultScriptName);
         });
       },
     },

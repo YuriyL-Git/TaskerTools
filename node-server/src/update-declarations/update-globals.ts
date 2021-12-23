@@ -1,3 +1,0 @@
-function updateGlobals(globals: string[]) {
-
-}

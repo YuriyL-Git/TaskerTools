@@ -14,39 +14,35 @@ async function getLocalVariablesDeclaration() {
   }
 
   const declaredLocals = await new Promise((resolve, reject) => {
-    fs.readFile(
-      "src/variable-declarations/declared-locals.ts",
-      "utf8",
-      (err, data) => {
-        if (err) {
-          errorMessage(err);
-          reject();
-        }
-
-        const result = data
-          .split("\n")
-          .filter((line) => line.includes(":") && line.includes(","))
-          .map((line) => {
-            const varData = line.split(":");
-            const variable = varData[0].trim();
-            if (variable.toLowerCase() !== variable) {
-              errorMessage(
-                "Local variables for tasker always should be lover case!! \n" +
-                  `Please correct variable => ${variable}`
-              );
-              throw Error();
-            }
-            const variableVal = varData[1].replace(",", "").trim();
-            return getVariableCondition(variable, variableVal);
-          })
-          .join("\n");
-        resolve(result);
+    fs.readFile("src/declarations/declared-locals.ts", "utf8", (err, data) => {
+      if (err) {
+        errorMessage(err);
+        reject();
       }
-    );
+
+      const result = data
+        .split("\n")
+        .filter((line) => line.includes(":") && line.includes(","))
+        .map((line) => {
+          const varData = line.split(":");
+          const variable = varData[0].trim();
+          if (variable.toLowerCase() !== variable) {
+            errorMessage(
+              "Local variables for tasker always should be lover case!! \n" +
+                `Please correct variable => ${variable}`
+            );
+            throw Error();
+          }
+          const variableVal = varData[1].replace(",", "").trim();
+          return getVariableCondition(variable, variableVal);
+        })
+        .join("\n");
+      resolve(result);
+    });
   });
 
   const taskerLocals = await new Promise((resolve, reject) => {
-    fs.readFile("tasker_helpers/tasker-locals.inf", "utf8", (err, data) => {
+    fs.readFile("tasker/tasker-locals.inf", "utf8", (err, data) => {
       if (err) {
         errorMessage(err);
         reject();
