@@ -6,10 +6,10 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "nodeserver": "cd node-server && npm start",
+    "devserver": "cd tasker/dev-server && npm start",
     "webpack": "webpack --watch --progress",
-    "start": "npm-run-all -p -r nodeserver webpack",
-    "postinstall": "(cd node-server && npm install);"
+    "start": "npm-run-all -p -r devserver webpack",
+    "postinstall": "(cd tasker/dev-server && npm install);"
   },
   "author": "",
   "license": "ISC",

@@ -1,7 +1,7 @@
 import { sendAutoRemoteMessage } from "../helpers/autoremote";
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
-import { CONNECTION_TIMEOUT } from "../helpers/constants";
+import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage, successMessage } from "../helpers/messages";
 import { processInputData } from "../process-data/process-input-data";
 

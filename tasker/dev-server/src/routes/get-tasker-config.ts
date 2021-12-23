@@ -1,7 +1,7 @@
 import { Router } from "express";
 import events from "events";
 import { sendAutoRemoteMessage } from "../helpers/autoremote";
-import { CONNECTION_TIMEOUT } from "../helpers/constants";
+import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage } from "../helpers/messages";
 
 export const taskerConfigRouter = Router();

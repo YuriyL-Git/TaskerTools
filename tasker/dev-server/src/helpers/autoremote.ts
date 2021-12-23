@@ -1,10 +1,11 @@
 import https from "https";
 import dotenv from "dotenv";
 import { errorMessage } from "./messages";
+import { ENV_PATH } from "../config/config";
 
-dotenv.config({ path: "../.env" });
-
+dotenv.config({ path: ENV_PATH });
 const autoRemoteKey = process.env.AUTO_REMOTE_KEY;
+
 const autoRemoteUrl =
   "https://autoremotejoaomgcd.appspot.com/sendmessage?key=" +
   autoRemoteKey +

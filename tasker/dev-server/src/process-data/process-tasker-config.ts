@@ -3,8 +3,9 @@ import { waitTaskerConfig } from "../routes/get-tasker-config";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
+import { ENV_PATH } from "../config/config";
 
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: ENV_PATH });
 const scriptName = process.env.SCRIPT_FILE_NAME;
 
 interface localData {

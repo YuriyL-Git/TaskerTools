@@ -3,8 +3,9 @@ import { waitUserInput } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
 import { highlightMessage, taskerMessage } from "../helpers/messages";
 import { waitTaskerConfig } from "../routes/get-tasker-config";
+import { ENV_PATH } from "../config/config";
 
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: ENV_PATH });
 
 const savedTaskName: string = (process.env.TASK_NAME || "")
   .toUpperCase()
@@ -34,7 +35,7 @@ export async function processInputData(taskerResponse: string): Promise<void> {
   const configData: string = await waitTaskerConfig();
   const locals: string[] = getLocals(configData, currTaskName);
   //const localsSection;
-  //console.log(configData);
+  console.log(locals);
 }
 
 function printTasksList(tasks: string[], savedTaskIndex: number): void {

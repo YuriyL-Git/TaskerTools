@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import fs from "fs";
-
-const ENV_PATH: string = "../.env";
+import { ENV_PATH } from "../config/config";
 
 export function updateEnv(varName: string, value: string, eol = "\n") {
   const envFile = fs.readFileSync(ENV_PATH);
