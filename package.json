@@ -6,10 +6,10 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "nodeserver": "cd node-server && npm start",
+    "devserver": "cd tasker/dev-server && npm start",
     "webpack": "webpack --watch --progress",
-    "start": "npm-run-all -p -r nodeserver webpack",
-    "postinstall": "(cd node-server && npm install);"
+    "start": "npm-run-all -p -r devserver webpack",
+    "postinstall": "(cd tasker/dev-server && npm install);"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@types/node": "^17.0.0",
     "dotenv": "^10.0.0",
     "googleapis": "^92.0.0",
+    "module-alias": "^2.2.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1"
   },
