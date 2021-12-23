@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
-import { waitUserInput } from "../helpers/wait-user-input";
+import { waitUserInputAsync } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
 import { highlightMessage, taskerMessage } from "../helpers/messages";
-import { waitTaskerConfig } from "../routes/get-tasker-config";
+import { waitTaskerConfigAsync } from "../routes/get-tasker-config";
 import { ENV_PATH } from "../config/config";
+import { updateDeclarationsAsync } from "../update-declarations/update-declarations";
 
 dotenv.config({ path: ENV_PATH });
 
@@ -18,7 +19,9 @@ interface TaskerData {
   tasks: string;
 }
 
-export async function processInputData(taskerResponse: string): Promise<void> {
+export async function processInputDataAsync(
+  taskerResponse: string
+): Promise<void> {
   const taskerData: TaskerData = JSON.parse(taskerResponse) as TaskerData;
   const tasks: string[] = taskerData.tasks.split(",");
   const globals: string[] = taskerData.globals
@@ -27,14 +30,11 @@ export async function processInputData(taskerResponse: string): Promise<void> {
 
   const savedTaskNumber: number = getSavedTaskNumber(tasks);
   printTasksList(tasks, savedTaskNumber);
-  const currTaskName: string = await processTaskNameUserInput(
-    tasks,
-    savedTaskNumber
-  );
-  await processScriptNameUserInput();
-  const configData: string = await waitTaskerConfig();
+  const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
+  await waitScriptNameAsync();
+  const configData: string = await waitTaskerConfigAsync();
   const locals: string[] = getLocals(configData, currTaskName);
-  //const localsSection;
+  await updateDeclarationsAsync(globals, locals);
   console.log(locals);
 }
 
@@ -63,7 +63,7 @@ function getSavedTaskNumber(tasks: string[]): number {
   return savedTaskNumber;
 }
 
-async function processTaskNameUserInput(
+async function waitTaskNameAsync(
   tasks: string[],
   savedTaskNumber: number
 ): Promise<string> {
@@ -72,7 +72,7 @@ async function processTaskNameUserInput(
     "Please enter the number of task or press enter to continue with selected task",
     false
   );
-  const taskNumberAnswer: string = await waitUserInput(
+  const taskNumberAnswer: string = await waitUserInputAsync(
     (ans: string): boolean => {
       const taskNumber: number = Number(ans);
       return (
@@ -94,7 +94,7 @@ async function processTaskNameUserInput(
   return currTaskName;
 }
 
-async function processScriptNameUserInput(): Promise<void> {
+async function waitScriptNameAsync(): Promise<void> {
   console.log(
     "\x1b[34m",
     "Please enter desired script name or press enter to continue with script name -> ",
@@ -102,12 +102,14 @@ async function processScriptNameUserInput(): Promise<void> {
     savedScriptName,
     "\x1b[0m"
   );
-  let scriptNameAnswer: string = await waitUserInput((ans: string): boolean => {
-    return (
-      (savedScriptName.length > 0 && ans.length === 0) ||
-      (ans.endsWith(".js") && ans.length > 3)
-    );
-  });
+  let scriptNameAnswer: string = await waitUserInputAsync(
+    (ans: string): boolean => {
+      return (
+        (savedScriptName.length > 0 && ans.length === 0) ||
+        (ans.endsWith(".js") && ans.length > 3)
+      );
+    }
+  );
 
   if (scriptNameAnswer.length === 0) {
     scriptNameAnswer = savedScriptName;
@@ -121,6 +123,6 @@ function getLocals(configData: string, taskName: string): string[] {
     `<nme>${taskName}<\/nme>(.*?)<\/Task>`
   );
   const [localsSection = null] = configData.match(sectionRegex) || [];
-  const locals: string[] = localsSection?.match(/(?<=%)[a-z_]+/g) || [];
+  const locals: string[] = localsSection?.match(/(?<=%)[a-z_)(]+/g) || [];
   return Array.from(new Set(locals));
 }

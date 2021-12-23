@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 /*import { postBuilder } from "./post-build.js";
 import { preBuildStart, uploadFile } from "./pre-build.js";*/
-import { waitServerReady } from "./webpack-helpers/wait-node-response.js";
+import { waitServerReadyAsync } from "./webpack-helpers/wait-node-response.js";
 
 //await waitServerReady();
 
@@ -26,9 +26,10 @@ export default {
     filename: resultScriptName,
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".d.ts"],
     alias: {
       tasker: path.join(__dirname, "./tasker"),
+      locals: path.join(__dirname, "./tasker/types"),
     },
   },
   module: {

@@ -3,12 +3,12 @@ import { uploadFile } from "./pre-build.js";
 
 export function postBuilder(fileName) {
   setTimeout(async () => {
-    await updateBuildFile(fileName);
+    await updateBuildFileAsync(fileName);
     await uploadFile(fileName);
   }, 100);
 }
 
-async function getLocalVariablesDeclaration() {
+async function getLocalVariablesDeclarationAsync() {
   function getVariableCondition(variable, variableVal) {
     return `if (local("${variable}") == "undefined") { var ${variable} = ${variableVal} };`;
   }
@@ -58,13 +58,13 @@ async function getLocalVariablesDeclaration() {
   return declaredLocals + "\n" + taskerLocals;
 }
 
-async function updateBuildFile(fileName) {
+async function updateBuildFileAsync(fileName) {
   return new Promise(async (resolve) => {
     fs.readFile("dist/" + fileName, "utf8", async (err, data) => {
       if (err) {
         return errorMessage(err);
       }
-      const updatedData = await getUpdatedFileData(data);
+      const updatedData = await getUpdatedFileDataAsync(data);
 
       fs.writeFile("dist/" + fileName, updatedData, (err) => {
         if (err) {
@@ -77,8 +77,8 @@ async function updateBuildFile(fileName) {
   });
 }
 
-async function getUpdatedFileData(data) {
-  const locals = await getLocalVariablesDeclaration();
+async function getUpdatedFileDataAsync(data) {
+  const locals = await getLocalVariablesDeclarationAsync();
   let result = data.replace(/[a-zA-Z]+\.locals\./g, "");
 
   return locals + "\n" + result;

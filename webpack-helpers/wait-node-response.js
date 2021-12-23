@@ -1,6 +1,6 @@
 import http from "http";
 
-export async function waitServerReady() {
+export async function waitServerReadyAsync() {
   let shouldContinue = false;
 
   const requestListener = function (req, res) {

@@ -1,5 +1,5 @@
 import { errorMessage } from "../helpers/messages";
-import { waitTaskerConfig } from "../routes/get-tasker-config";
+import { waitTaskerConfigAsync } from "../routes/get-tasker-config";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
@@ -18,7 +18,7 @@ interface ITaskerData {
   locals: Array<localData>;
 }
 
-export async function processTaskerConfig(): Promise<void> {
+export async function processTaskerConfigAsync(): Promise<void> {
   try {
     //processConfigContent(configLines);
   } catch (error) {}

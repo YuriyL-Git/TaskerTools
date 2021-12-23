@@ -1,7 +1,7 @@
 import readline from "readline";
 import { errorMessage, taskerMessage } from "./messages";
 
-export async function waitUserInput(
+export async function waitUserInputAsync(
   testFunc: (answer: string) => boolean
 ): Promise<string> {
   let readLine: readline.Interface | null = null;

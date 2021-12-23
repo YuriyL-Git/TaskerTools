@@ -1,6 +1,6 @@
 import { Router } from "express";
 import events from "events";
-import { sendMessageToTasker } from "../helpers/autoremote";
+import { sendMessageToTasker } from "../message-sender/message-sender";
 import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage } from "../helpers/messages";
 
@@ -12,7 +12,7 @@ const configReceivedEvent: string = "configreceived";
 
 let configContent: string = "";
 
-export async function waitTaskerConfig(): Promise<string> {
+export async function waitTaskerConfigAsync(): Promise<string> {
   let isSuccess: boolean = false;
   return new Promise((resolve, reject) => {
     function onSuccess() {
