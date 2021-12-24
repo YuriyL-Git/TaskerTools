@@ -17,7 +17,8 @@ function getTaskerAddress(ip: string, port: string): string {
 
 export function sendMessageToTasker(prefix: string, message: string) {
   http
-    .get(taskerAddress + prefix + "=" + message, (result) => {})
+    .get(taskerAddress + prefix + "=" + message, (result) => {
+    })
     .on("error", (err) => {
       errorMessage("Error: " + err.message);
     });
@@ -43,7 +44,8 @@ export async function setupConnection(hostaddress: string): Promise<void> {
           reject();
         }
       });
-    } catch {}
+    } catch {
+    }
 
     if (!isConnected && networkDevices.length === 0) {
       networkDevices.push(...(await find()));
@@ -65,8 +67,6 @@ export async function setupConnection(hostaddress: string): Promise<void> {
       updateEnv("TASKER_IP", taskerIp);
     }
   } else {
-    errorMessage(
-      "Failed to connect to tasker. Please check network event plugin and try again "
-    );
+    errorMessage("Failed to connect to tasker. Please check network event plugin and try again ");
   }
 }

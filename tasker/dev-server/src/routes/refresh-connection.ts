@@ -1,7 +1,4 @@
-import {
-  sendMessageToTasker,
-  setupConnection,
-} from "../message-sender/message-sender";
+import { sendMessageToTasker, setupConnection } from "../message-sender/message-to-tasker";
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
@@ -15,7 +12,7 @@ let taskerDataResponse: string = "";
 
 export async function refreshConnectionAsync(
   hostAddress: string,
-  isFirstStart = false
+  isFirstStart = false,
 ): Promise<void> {
   let isConnectionSuccessFull = false;
 
@@ -28,19 +25,15 @@ export async function refreshConnectionAsync(
       resolve();
     }
 
-    ///
     connectionEmmitter.once(connectionEvent, onSuccess);
-    // sendAutoRemoteMessage("setupconnection", hostAddress);
-    //sendMessageToTasker("hostaddress", hostAddress);
     setupConnection(hostAddress);
-    console.log("CONNECTION_TIMEOUT", CONNECTION_TIMEOUT);
 
     setTimeout(() => {
       if (!isConnectionSuccessFull) {
         connectionEmmitter.off(connectionEvent, onSuccess);
         errorMessage("Node server failed to connect to tasker");
         errorMessage(
-          "Check your auto remote key(AUTO_REMOTE_KEY) in .env file and restart the server"
+          "Check your auto remote key(AUTO_REMOTE_KEY) in .env file and restart the server",
         );
         reject();
       }
@@ -48,16 +41,10 @@ export async function refreshConnectionAsync(
   });
 
   await processInputDataAsync(taskerDataResponse);
-  // await processTaskerConfig();////
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {
-  console.log("CONNECTION"); //
-  console.log(req.query.response);
-  if (
-    connectionEmmitter.listenerCount(connectionEvent) > 0 &&
-    req.query?.response === "success"
-  ) {
+  if (connectionEmmitter.listenerCount(connectionEvent) > 0 && req.query?.response === "success") {
     taskerDataResponse = JSON.stringify(req.query);
     connectionEmmitter.emit(connectionEvent);
     res.send("success");
