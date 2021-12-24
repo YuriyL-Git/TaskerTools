@@ -5,10 +5,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import fileupload from "express-fileupload";
 import { taskerConfigRouter } from "./routes/get-tasker-config";
-import {
-  connectionRouter,
-  refreshConnectionAsync,
-} from "./routes/refresh-connection";
+import { connectionRouter, refreshConnectionAsync } from "./routes/refresh-connection";
 
 dotenv.config({ path: "../.env" });
 
@@ -19,7 +16,7 @@ const hostAddress = `${ip.address()}:${PORT}`;
 const EventEmitter = events.EventEmitter;
 export const connectionEmmitter = new EventEmitter();
 
-refreshConnectionAsync(hostAddress, true);
+refreshConnectionAsync(hostAddress, true).then(() => {});
 
 const app = express();
 app.use(express.static("files"));
@@ -28,7 +25,7 @@ app.use(
   bodyParser.urlencoded({
     limit: "20mb",
     extended: false,
-  })
+  }),
 );
 app.use("/", connectionRouter);
 app.use("/", taskerConfigRouter);
@@ -39,5 +36,5 @@ app.get("/script", (req, res) => {
 });
 
 app.listen(PORT, hostIp, () => {
-  console.log("Server started on address: ", hostAddress);
+  console.log("\n Server started on address: ", hostAddress);
 });

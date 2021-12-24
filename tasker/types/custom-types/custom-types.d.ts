@@ -1,24 +1,26 @@
-import { GlobalsDeclaration } from "declarations";
+import { GlobalsDeclaration } from "declarations"; 
 
-export type LocalArrays = "tedddi()";
-
-export type CustomGlobals =
+export type CustomGlobals = 
   | "NotificationTitle"
-  | "TaskerToolsHostAddress"
-  | "ContinueNotification"
   | "RepeatTime"
-  | "NotificStatus"
   | "NotoficStatus"
   | "Notification"
+  | "TaskerToolsHostAddress"
+  | "ContinueNotification"
+  | "NotificStatus"
   | "scriptPath"
-  | "matTitle"
-  | GlobalsDeclaration;
+  | GlobalsDeclaration; 
 
 export interface ITaskerLocals {
-  tedddi: string;
-  err: string;
-  errmsg: string;
-  priority: string;
-  qtime: string;
-  caller: string;
+  requesturl: string;
+  tpe_hostaddress: string;
+  query: string;
+  tasks: string[];
+  globals: string[];
+  http_cookies: string;
+  http_data: string;
+  http_file_output: string;
+  http_response_code: string;
+  http_headers: string[];
+  http_response_length: string;
 }

@@ -1,19 +1,13 @@
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-/*import { postBuilder } from "./post-build.js";
-import { preBuildStart, uploadFile } from "./pre-build.js";*/
-import { waitServerReadyAsync } from "./webpack-helpers/wait-node-response.js";
+import { waitServerReadyAsync } from "./tasker/webpack-helpers/wait-node-response.js";
 
-//await waitServerReady();
+await waitServerReadyAsync();
 
 env.config();
 const resultScriptName = process.env.SCRIPT_FILE_NAME;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-//await uploadFile(resultScriptName);
-
-//preBuildStart(resultScriptName);
 
 export default {
   mode: "production",

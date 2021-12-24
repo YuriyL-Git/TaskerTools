@@ -1,6 +1,6 @@
 import { Router } from "express";
 import events from "events";
-import { sendMessageToTasker } from "../message-sender/message-sender";
+import { sendMessageToTasker } from "../message-sender/message-to-tasker";
 import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage } from "../helpers/messages";
 
