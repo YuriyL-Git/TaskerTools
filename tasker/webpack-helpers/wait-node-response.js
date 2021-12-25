@@ -1,12 +1,12 @@
 import http from "http";
 
-export async function waitServerReadyAsync() {
+export default async function waitServerReadyAsync() {
   let shouldContinue = false;
 
   const requestListener = function (req, res) {
     if (req.url === "/tasker-server-ready") {
       shouldContinue = true;
-      console.log("\x1b[32m", "Webpack is ready \n", "\x1b[0m");
+      console.log("\x1b[32m", "Dev server is ready \n", "\x1b[0m");
       res.end("success");
     } else {
       res.end("wrong request");

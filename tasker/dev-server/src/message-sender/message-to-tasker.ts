@@ -58,6 +58,7 @@ export async function setupConnection(hostaddress: string): Promise<void> {
       taskerIp = networkDevices.pop()?.ip || "";
       taskerAddress = getTaskerAddress(taskerIp, taskerPort);
     }
+    console.log("TASKER ADDRESS", taskerAddress);
   } while (!isConnected || isTimeOut);
 
   if (isConnected) {

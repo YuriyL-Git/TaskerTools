@@ -79,7 +79,7 @@ async function updateBuildFileAsync(fileName) {
 
 async function getUpdatedFileDataAsync(data) {
   const locals = await getLocalVariablesDeclarationAsync();
-  let result = data.replace(/[a-zA-Z]+\.locals\./g, "");
+  let result = data.replace(/[a-zA-Z0-9_]+\.locals\./g, "");
 
   return locals + "\n" + result;
 }

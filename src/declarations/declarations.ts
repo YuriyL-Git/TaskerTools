@@ -1,6 +1,6 @@
-export type GlobalsDeclaration = "Placeholder" | "Placeholder2";
+export type GlobalsDeclaration = "Placeholder" | "PlaceholderTwo";
 
 export interface LocalsDeclaration {
   placeholder: string;
-  placeholder2: string;
+  placeholder_two: string;
 }

@@ -1,7 +1,9 @@
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { waitServerReadyAsync } from "./tasker/webpack-helpers/wait-node-response.js";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import waitServerReadyAsync from "./tasker/webpack-helpers/wait-node-response.js";
+import { postBuilder } from "./tasker/webpack-helpers/post-builder.js";
 
 await waitServerReadyAsync();
 
@@ -38,9 +40,10 @@ export default {
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-          // postBuilder(resultScriptName);
+          postBuilder(resultScriptName);
         });
       },
     },
+    new CleanWebpackPlugin(),
   ],
 };

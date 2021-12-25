@@ -2,13 +2,13 @@ import { GlobalsDeclaration } from "declarations";
 
 export type CustomGlobals = 
   | "NotificationTitle"
-  | "RepeatTime"
   | "NotoficStatus"
   | "Notification"
-  | "TaskerToolsHostAddress"
-  | "ContinueNotification"
   | "NotificStatus"
   | "scriptPath"
+  | "RepeatTime"
+  | "TaskerToolsHostAddress"
+  | "ContinueNotification"
   | GlobalsDeclaration; 
 
 export interface ITaskerLocals {
