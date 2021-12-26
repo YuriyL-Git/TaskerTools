@@ -12,6 +12,10 @@ dotenv.config({ path: ENV_PATH });
 const savedTaskName: string = (process.env.TASK_NAME || "").toUpperCase().trim();
 const savedScriptName: string = (process.env.SCRIPT_FILE_NAME || "").trim();
 
+export const scriptData: { name: string } = {
+  name: savedScriptName,
+};
+
 interface TaskerData {
   response: string;
   globals: string;
@@ -27,12 +31,13 @@ export async function processInputDataAsync(taskerResponse: string): Promise<voi
   printTasksList(tasks, savedTaskNumber);
 
   const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
-  await waitScriptNameAsync();
+  const scriptName: string = await waitScriptNameAsync();
   const configData: string = await waitTaskerConfigAsync();
   const locals: string[] = getLocals(configData, currTaskName);
 
   updateTypes(globals, locals);
-  sendMessageReadyToWebpack();
+  scriptData.name = scriptName;
+  sendMessageReadyToWebpack(scriptName);
 }
 
 function printTasksList(tasks: string[], savedTaskIndex: number): void {
@@ -79,7 +84,7 @@ async function waitTaskNameAsync(tasks: string[], savedTaskNumber: number): Prom
   return currTaskName;
 }
 
-async function waitScriptNameAsync(): Promise<void> {
+async function waitScriptNameAsync(): Promise<string> {
   console.log(
     "\x1b[34m",
     "Please enter desired script name or press enter to continue with script name -> ",
@@ -87,16 +92,18 @@ async function waitScriptNameAsync(): Promise<void> {
     savedScriptName,
     "\x1b[0m",
   );
-  let scriptNameAnswer: string = await waitUserInputAsync((ans: string): boolean => {
+  let scriptName: string = await waitUserInputAsync((ans: string): boolean => {
     return (
       (savedScriptName.length > 0 && ans.length === 0) || (ans.endsWith(".js") && ans.length > 3)
     );
   });
 
-  if (scriptNameAnswer.length === 0) {
-    scriptNameAnswer = savedScriptName;
+  if (scriptName.length === 0) {
+    scriptName = savedScriptName;
   }
-  updateEnv("SCRIPT_FILE_NAME", scriptNameAnswer);
+  updateEnv("SCRIPT_FILE_NAME", scriptName);
+
+  return scriptName;
 }
 
 function getLocals(configData: string, taskName: string): string[] {

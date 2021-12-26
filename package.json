@@ -9,7 +9,9 @@
     "devserver": "cd tasker/dev-server && npm start",
     "webpack": "webpack --watch --progress",
     "start": "npm-run-all -p -r devserver webpack",
-    "postinstall": "(cd tasker/dev-server && npm install);"
+    "postinstall": "(cd tasker/dev-server && npm install);",
+    "stop-win": "Taskkill /IM node.exe /F",
+    "stop-linux": "killall node"
   },
   "author": "",
   "license": "ISC",

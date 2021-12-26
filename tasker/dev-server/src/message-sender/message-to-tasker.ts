@@ -1,6 +1,6 @@
 import http from "http";
 import dotenv from "dotenv";
-import { errorMessage } from "../helpers/messages";
+import { errorMessage, taskerMessage } from "../helpers/messages";
 import { ENV_PATH } from "../config/config";
 import find from "local-devices";
 import { updateEnv } from "../helpers/update-env";
@@ -17,8 +17,7 @@ function getTaskerAddress(ip: string, port: string): string {
 
 export function sendMessageToTasker(prefix: string, message: string) {
   http
-    .get(taskerAddress + prefix + "=" + message, (result) => {
-    })
+    .get(taskerAddress + prefix + "=" + message, (result) => {})
     .on("error", (err) => {
       errorMessage("Error: " + err.message);
     });
@@ -44,8 +43,7 @@ export async function setupConnection(hostaddress: string): Promise<void> {
           reject();
         }
       });
-    } catch {
-    }
+    } catch {}
 
     if (!isConnected && networkDevices.length === 0) {
       networkDevices.push(...(await find()));
@@ -58,7 +56,9 @@ export async function setupConnection(hostaddress: string): Promise<void> {
       taskerIp = networkDevices.pop()?.ip || "";
       taskerAddress = getTaskerAddress(taskerIp, taskerPort);
     }
-    console.log("TASKER ADDRESS", taskerAddress);
+    taskerMessage(
+      "Trying to connect to tasker server by address " + taskerAddress.replace("/?", "") + " ...",
+    );
   } while (!isConnected || isTimeOut);
 
   if (isConnected) {
@@ -68,6 +68,7 @@ export async function setupConnection(hostaddress: string): Promise<void> {
       updateEnv("TASKER_IP", taskerIp);
     }
   } else {
-    errorMessage("Failed to connect to tasker. Please check network event plugin and try again ");
+    errorMessage("Failed to connect to tasker. \n", false);
+    taskerMessage("Check if network plugin server is started!");
   }
 }

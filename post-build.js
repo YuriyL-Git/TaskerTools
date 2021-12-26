@@ -1,5 +1,9 @@
 import fs from "fs";
 import { uploadFile } from "./pre-build.js";
+import { ENV_PATH } from "./tasker/dev-server/src/config/config.js";
+
+dotenv.config({ path: ENV_PATH });
+const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
 
 export function postBuilder(fileName) {
   setTimeout(async () => {

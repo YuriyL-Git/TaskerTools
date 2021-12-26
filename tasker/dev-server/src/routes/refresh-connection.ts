@@ -2,7 +2,7 @@ import { sendMessageToTasker, setupConnection } from "../message-sender/message-
 import { connectionEmmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
-import { errorMessage, successMessage } from "../helpers/messages";
+import { errorMessage, successMessage, taskerMessage } from "../helpers/messages";
 import { processInputDataAsync } from "../process-data/process-input-data";
 
 export const connectionRouter = Router();
@@ -31,10 +31,8 @@ export async function refreshConnectionAsync(
     setTimeout(() => {
       if (!isConnectionSuccessFull) {
         connectionEmmitter.off(connectionEvent, onSuccess);
-        errorMessage("Node server failed to connect to tasker");
-        errorMessage(
-          "Check your auto remote key(AUTO_REMOTE_KEY) in .env file and restart the server",
-        );
+        errorMessage("Node server failed to connect to tasker", false);
+        taskerMessage("Check tasker if tasker network plugin is started");
         reject();
       }
     }, CONNECTION_TIMEOUT);

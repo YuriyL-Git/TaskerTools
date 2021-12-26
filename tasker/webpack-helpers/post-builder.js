@@ -2,40 +2,39 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import env from "dotenv";
+import http from "http";
 
 env.config();
 const isDevelopment = Boolean(process.env.IS_DEVELOPMENT.trim());
+const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
 
 const root = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "../.."
 );
 
-export function postBuilder(fileName) {
+export function postBuilder(scriptName) {
   setTimeout(async () => {
-    await updateBuildFileAsync(fileName);
-    //await messageScriptReady(fileName);
+    await updateBuildFileAsync(scriptName);
+    messageToTaskerScriptReady(scriptName);
   }, 100);
 }
 
-async function updateBuildFileAsync(fileName) {
-  console.log("DIRR NAME =", root);
-  console.log("DEVELOP", Boolean(isDevelopment));
-
+async function updateBuildFileAsync(scriptName) {
   return new Promise(async (resolve, reject) => {
-    fs.readFile("dist/" + fileName, "utf8", async (err, scriptData) => {
+    fs.readFile("dist/" + scriptName, "utf8", async (err, scriptData) => {
       if (err) {
         console.log(err);
         reject();
       }
       const updatedScript = await getUpdatedScript(scriptData);
 
-      fs.writeFile("dist/" + fileName, updatedScript, (err) => {
+      fs.writeFile("dist/" + scriptName, updatedScript, (err) => {
         if (err) {
           console.log(err);
           reject();
         }
-        console.log("Bundle updated");
+        successMessage("Bundle updated");
         resolve();
       });
     });
@@ -58,7 +57,7 @@ async function getLocalsDeclarations() {
     }
   }
 
-  const declaredLocals = await new Promise((resolve) => {
+  return await new Promise((resolve) => {
     fs.readFile(
       root + "/src/declarations/declarations.ts",
       "utf8",
@@ -80,24 +79,14 @@ async function getLocalsDeclarations() {
       }
     );
   });
+}
 
-  console.log("Declarations", declaredLocals);
-
-  /* const taskerLocals = await new Promise((resolve, reject) => {
-     fs.readFile("tasker/tasker-locals.inf", "utf8", (err, data) => {
-       if (err) {
-         errorMessage(err);
-         reject();
-       }
-
-       const result = data
-         .split(" ")
-         .map((variable) => getLocalDeclaration(variable, '""'))
-         .join("\n");
-       resolve(result);
-     });
-   });
-   return declaredLocals + "\n" + taskerLocals;*/
+function messageToTaskerScriptReady(scriptName) {
+  http
+    .get(taskerAddress + "scriptready=" + scriptName, (result) => {})
+    .on("error", (err) => {
+      errorMessage("Error: " + err.message);
+    });
 }
 
 function errorMessage(message) {

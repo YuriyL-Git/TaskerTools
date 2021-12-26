@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import fileupload from "express-fileupload";
 import { taskerConfigRouter } from "./routes/get-tasker-config";
 import { connectionRouter, refreshConnectionAsync } from "./routes/refresh-connection";
+import { sendScriptRouter } from "./routes/send-script-to-tasker";
 
 dotenv.config({ path: "../.env" });
 
@@ -29,6 +30,7 @@ app.use(
 );
 app.use("/", connectionRouter);
 app.use("/", taskerConfigRouter);
+app.use("/", sendScriptRouter);
 
 app.get("/script", (req, res) => {
   console.log("SUCCESS");

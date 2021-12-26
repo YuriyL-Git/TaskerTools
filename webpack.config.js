@@ -5,10 +5,7 @@ import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import waitServerReadyAsync from "./tasker/webpack-helpers/wait-node-response.js";
 import { postBuilder } from "./tasker/webpack-helpers/post-builder.js";
 
-await waitServerReadyAsync();
-
-env.config();
-const resultScriptName = process.env.SCRIPT_FILE_NAME;
+const scriptName = await waitServerReadyAsync();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
@@ -19,7 +16,7 @@ export default {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: resultScriptName,
+    filename: scriptName,
   },
   resolve: {
     extensions: [".ts", ".js", ".d.ts"],
@@ -40,7 +37,7 @@ export default {
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-          postBuilder(resultScriptName);
+          postBuilder(scriptName);
         });
       },
     },
