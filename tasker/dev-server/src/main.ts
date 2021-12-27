@@ -7,15 +7,18 @@ import fileupload from "express-fileupload";
 import { taskerConfigRouter } from "./routes/get-tasker-config";
 import { connectionRouter, refreshConnectionAsync } from "./routes/refresh-connection";
 import { sendScriptRouter } from "./routes/send-script-to-tasker";
+import { logToConsoleRouter } from "./routes/log-to-console";
+import { updateEnv } from "./helpers/update-env";
 
 dotenv.config({ path: "../.env" });
 
 const PORT: number = Number(process.env.PORT || 4000);
 const hostIp = ip.address();
 const hostAddress = `${ip.address()}:${PORT}`;
+updateEnv("DEV_SERVER_ADDRESS", hostAddress);
 
 const EventEmitter = events.EventEmitter;
-export const connectionEmmitter = new EventEmitter();
+export const connectionEmitter = new EventEmitter();
 
 refreshConnectionAsync(hostAddress, true).then(() => {});
 
@@ -31,6 +34,7 @@ app.use(
 app.use("/", connectionRouter);
 app.use("/", taskerConfigRouter);
 app.use("/", sendScriptRouter);
+app.use("/", logToConsoleRouter);
 
 app.get("/script", (req, res) => {
   console.log("SUCCESS");

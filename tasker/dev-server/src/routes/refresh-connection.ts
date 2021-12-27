@@ -1,5 +1,5 @@
 import { sendMessageToTasker, setupConnection } from "../message-sender/message-to-tasker";
-import { connectionEmmitter } from "../main";
+import { connectionEmitter } from "../main";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage, successMessage, taskerMessage } from "../helpers/messages";
@@ -25,12 +25,12 @@ export async function refreshConnectionAsync(
       resolve();
     }
 
-    connectionEmmitter.once(connectionEvent, onSuccess);
+    connectionEmitter.once(connectionEvent, onSuccess);
     setupConnection(hostAddress);
 
     setTimeout(() => {
       if (!isConnectionSuccessFull) {
-        connectionEmmitter.off(connectionEvent, onSuccess);
+        connectionEmitter.off(connectionEvent, onSuccess);
         errorMessage("Node server failed to connect to tasker", false);
         taskerMessage("Check tasker if tasker network plugin is started");
         reject();
@@ -42,9 +42,9 @@ export async function refreshConnectionAsync(
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {
-  if (connectionEmmitter.listenerCount(connectionEvent) > 0 && req.query?.response === "success") {
+  if (connectionEmitter.listenerCount(connectionEvent) > 0 && req.query?.response === "success") {
     taskerDataResponse = JSON.stringify(req.query);
-    connectionEmmitter.emit(connectionEvent);
+    connectionEmitter.emit(connectionEvent);
     res.send("success");
   } else {
     res.send("fail");

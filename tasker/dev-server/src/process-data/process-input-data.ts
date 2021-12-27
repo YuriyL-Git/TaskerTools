@@ -24,6 +24,7 @@ interface TaskerData {
 
 export async function processInputDataAsync(taskerResponse: string): Promise<void> {
   const taskerData: TaskerData = JSON.parse(taskerResponse) as TaskerData;
+
   const tasks: string[] = taskerData.tasks.split(",");
   const globals: string[] = taskerData.globals.split(",").map((global) => global.replace("%", ""));
 
@@ -33,6 +34,7 @@ export async function processInputDataAsync(taskerResponse: string): Promise<voi
   const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
   const scriptName: string = await waitScriptNameAsync();
   const configData: string = await waitTaskerConfigAsync();
+
   const locals: string[] = getLocals(configData, currTaskName);
 
   updateTypes(globals, locals);
@@ -46,7 +48,7 @@ function printTasksList(tasks: string[], savedTaskIndex: number): void {
     const taskToPrint: string = `${index + 1}. ` + " ".repeat(spacesNumber) + task;
 
     if (index === savedTaskIndex) {
-      console.log("\x1b[33m", taskToPrint);
+      console.log("\x1b[34m", taskToPrint);
     } else {
       console.log("\x1b[0m", taskToPrint);
     }

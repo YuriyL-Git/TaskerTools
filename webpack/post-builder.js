@@ -7,6 +7,7 @@ import http from "http";
 env.config();
 const isDevelopment = Boolean(process.env.IS_DEVELOPMENT.trim());
 const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
+const devServerAddress = `http://${process.env.DEV_SERVER_ADDRESS}`;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -39,10 +40,15 @@ async function updateBuildFileAsync(scriptName) {
 }
 
 async function getUpdatedScript(script) {
+  const result = [];
+  if (isDevelopment) {
+    result.push(getConsoleLogFunc());
+  }
   const localsDeclaration = await getLocalsDeclarations();
   const formattedScript = script.replace(/[a-zA-Z0-9_]+\.locals\./g, "");
+  result.push(localsDeclaration, formattedScript);
 
-  return localsDeclaration + "\n" + formattedScript;
+  return result.join("\n");
 }
 
 async function getLocalsDeclarations() {
@@ -76,6 +82,14 @@ async function getLocalsDeclarations() {
       }
     );
   });
+}
+
+function getConsoleLogFunc() {
+  const requestUrlContent = `const requestUrl = '${devServerAddress}/consolelog';`;
+  const functionContent =
+    "this.console.log = function(...args) {const data = new FormData(); data.append('message', args.join(''));" +
+    " fetch(requestUrl, { method: 'POST', body: data }); wait(1); }";
+  return [requestUrlContent, functionContent].join("\n");
 }
 
 function messageToTaskerScriptReady(scriptName) {

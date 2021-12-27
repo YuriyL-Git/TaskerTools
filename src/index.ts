@@ -1,6 +1,6 @@
 import { locals, tk } from "tasker";
 
-locals.placeholder = "10";
-tk.global("Placeholder");
-tk.flash("test");
-///////////////
+for (let i = 0; i < 100; i++) {
+  console.log("I was changed to ");
+}
+/////////////////
