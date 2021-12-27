@@ -6,12 +6,15 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
+    "start": "npm-run-all -p -r devserver webpack",
     "devserver": "cd tasker/dev-server && npm start",
     "webpack": "webpack --watch --progress",
-    "start": "npm-run-all -p -r devserver webpack",
-    "postinstall": "(cd tasker/dev-server && npm install);",
+    "restart": "run-script-os",
+    "restart:linux": "npm run stop-linux",
+    "restart:win32": "npm run stop-win",
     "stop-win": "Taskkill /IM node.exe /F",
-    "stop-linux": "killall node"
+    "stop-linux": "killall node",
+    "postinstall": "(cd tasker/dev-server && npm install);"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +25,8 @@
     "googleapis": "^92.0.0",
     "module-alias": "^2.2.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "run-script-os": "^1.1.6"
   },
   "devDependencies": {
     "@types/node-fetch": "^3.0.3",

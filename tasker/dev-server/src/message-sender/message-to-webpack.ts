@@ -5,7 +5,6 @@ env.config();
 const PORT = Number(process.env.WEBPACK_SERVER_PORT?.trim() || 8000);
 
 export function sendMessageReadyToWebpack(scriptName: string) {
-  console.log("SCRIPT NAME TO SEND", scriptName);
   const options = {
     hostname: "localhost",
     port: PORT,
