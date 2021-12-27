@@ -1,7 +1,7 @@
 {
   "name": "tasker",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "types/basic-types/index.js",
   "typings": "types/basic-types/index.d.ts"
 }

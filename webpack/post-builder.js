@@ -8,10 +8,7 @@ env.config();
 const isDevelopment = Boolean(process.env.IS_DEVELOPMENT.trim());
 const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
 
-const root = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../.."
-);
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export function postBuilder(scriptName) {
   setTimeout(async () => {

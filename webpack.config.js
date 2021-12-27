@@ -2,8 +2,8 @@ import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import waitServerReadyAsync from "./tasker/webpack-helpers/wait-node-response.js";
-import { postBuilder } from "./tasker/webpack-helpers/post-builder.js";
+import waitServerReadyAsync from "./webpack/wait-node-response.js";
+import { postBuilder } from "./webpack/post-builder.js";
 
 const scriptName = await waitServerReadyAsync();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
