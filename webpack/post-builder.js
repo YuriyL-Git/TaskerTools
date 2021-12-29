@@ -6,6 +6,8 @@ import http from "http";
 
 env.config();
 const isDevelopment = Boolean(process.env.IS_DEVELOPMENT.trim());
+const isAutoJs = process.env.IS_AUTOJS.trim() === "true";
+
 const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
 const devServerAddress = `http://${process.env.DEV_SERVER_ADDRESS}`;
 
@@ -44,9 +46,14 @@ async function getUpdatedScript(script) {
   if (isDevelopment) {
     result.push(getConsoleLogFunc());
   }
+
   const localsDeclaration = await getLocalsDeclarations();
   const formattedScript = script.replace(/[a-zA-Z0-9_]+\.locals\./g, "");
-  result.push(localsDeclaration, formattedScript);
+  if (localsDeclaration.length > 0) {
+    result.push(localsDeclaration);
+  }
+
+  result.push(formattedScript);
 
   return result.join("\n");
 }
@@ -67,7 +74,7 @@ async function getLocalsDeclarations() {
       (err, data) => {
         const result = data
           .match(/[a-z_]+(?=:)/gi)
-          .map((variable) => {
+          ?.map((variable) => {
             if (variable.toLowerCase() !== variable) {
               errorMessage(
                 "Local variables for tasker always should be lover case!! \n" +
@@ -77,8 +84,8 @@ async function getLocalsDeclarations() {
             }
             return getLocalDeclaration(variable);
           })
-          .join("\n");
-        resolve(result);
+          ?.join("\n");
+        resolve(result || "");
       }
     );
   });
@@ -86,9 +93,16 @@ async function getLocalsDeclarations() {
 
 function getConsoleLogFunc() {
   const requestUrlContent = `const requestUrl = '${devServerAddress}/consolelog';`;
-  const functionContent =
-    "this.console.log = function(...args) {const data = new FormData(); data.append('message', args.join(''));" +
-    " fetch(requestUrl, { method: 'POST', body: data }); wait(1); }";
+  const taskerContent =
+    "console.log = function(...args) {const data = new FormData(); data.append('message', args.join(''));" +
+    " fetch(requestUrl, { method: 'POST', body: data }); wait(1); };";
+  const autoJsFuncContent =
+    `console.log = function() { const params = arguments; const message = Object.keys(params).map((key) => params[key]).join();
+ const options = {headers: { 'Content-Type': 'application/x-www-form-urlencoded' },body: message};` +
+    `$http.post(requestUrl, options);` +
+    "sleep(1);};";
+  console.log("IS AUTO JS", isAutoJs);
+  const functionContent = isAutoJs ? autoJsFuncContent : taskerContent;
   return [requestUrlContent, functionContent].join("\n");
 }
 

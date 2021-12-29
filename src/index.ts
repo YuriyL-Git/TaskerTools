@@ -1,4 +1,2 @@
-import { locals, tk } from "tasker";
-
-console.log(tk.global("TaskerToolsHostAddress"));
-/////////////////
+console.log("test", 2, "test 3");
+//

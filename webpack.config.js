@@ -1,4 +1,3 @@
-import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
@@ -12,7 +11,7 @@ export default {
   mode: "production",
   entry: "./src/index.ts",
   optimization: {
-    minimize: true,
+    minimize: false,
   },
   output: {
     path: path.resolve(__dirname, "dist"),

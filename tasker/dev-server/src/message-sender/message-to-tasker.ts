@@ -47,6 +47,7 @@ export async function setupConnection(hostaddress: string): Promise<void> {
 
     if (!isConnected && networkDevices.length === 0) {
       networkDevices.push(...(await find()));
+
       setTimeout(() => {
         isTimeOut = true;
       }, CONNECTION_TIMEOUT);
