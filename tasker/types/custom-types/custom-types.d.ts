@@ -12,7 +12,6 @@ export type CustomGlobals =
   | GlobalsDeclaration; 
 
 export interface ITaskerLocals {
-  takka: string;
-  placeholder: string;
-  taskervar: string;
+  getconfigurl: string;
+  taskerdata: string;
 }

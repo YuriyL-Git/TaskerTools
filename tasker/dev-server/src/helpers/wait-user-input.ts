@@ -1,9 +1,7 @@
 import readline from "readline";
-import { errorMessage, taskerMessage } from "./messages";
+import { errorMessage } from "./messages";
 
-export async function waitUserInputAsync(
-  testFunc: (answer: string) => boolean
-): Promise<string> {
+export async function waitUserInputAsync(testFunc: (answer: string) => boolean): Promise<string> {
   let readLine: readline.Interface | null = null;
   let answer: string = "";
   let isCorrectAns: boolean = false;
@@ -16,7 +14,7 @@ export async function waitUserInputAsync(
       readLine?.question("", (ans) => {
         readLine?.close();
         resolve(ans.trim());
-      })
+      }),
     );
 
     isCorrectAns = testFunc(answer);

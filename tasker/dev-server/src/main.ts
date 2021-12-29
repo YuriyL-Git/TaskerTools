@@ -20,8 +20,6 @@ updateEnv("DEV_SERVER_ADDRESS", hostAddress);
 const EventEmitter = events.EventEmitter;
 export const connectionEmitter = new EventEmitter();
 
-refreshConnectionAsync(hostAddress, true).then(() => {});
-
 const app = express();
 app.use(express.static("files"));
 app.use(fileupload());
@@ -44,3 +42,5 @@ app.get("/script", (req, res) => {
 app.listen(PORT, hostIp, () => {
   console.log("\n Server started on address: ", hostAddress);
 });
+
+refreshConnectionAsync(hostAddress, true);

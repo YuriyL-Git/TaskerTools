@@ -6,6 +6,7 @@ import { waitTaskerConfigAsync } from "../routes/get-tasker-config";
 import { ENV_PATH } from "../config/config";
 import { updateTypes } from "../update-types/update-types";
 import { sendMessageReadyToWebpack } from "../message-sender/message-to-webpack";
+import { waitTaskName } from "../ui-interface/task-name-menu";
 
 dotenv.config({ path: ENV_PATH });
 
@@ -29,13 +30,17 @@ export async function processInputDataAsync(taskerResponse: string): Promise<voi
   const globals: string[] = taskerData.globals.split(",").map((global) => global.replace("%", ""));
 
   const savedTaskNumber: number = getSavedTaskNumber(tasks);
-  printTasksList(tasks, savedTaskNumber);
+  const taskName: string = await waitTaskName(tasks, savedTaskNumber);
+  updateEnv("TASK_NAME", taskName);
+  console.log("SELECTED TASK =", taskName);
 
-  const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
+  //printTasksList(tasks, savedTaskNumber);
+
+  //const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
   const scriptName: string = await waitScriptNameAsync();
   const configData: string = await waitTaskerConfigAsync();
 
-  const locals: string[] = getLocals(configData, currTaskName);
+  const locals: string[] = getLocals(configData, taskName);
 
   updateTypes(globals, locals);
   scriptData.name = scriptName;
@@ -65,10 +70,10 @@ function getSavedTaskNumber(tasks: string[]): number {
 
 async function waitTaskNameAsync(tasks: string[], savedTaskNumber: number): Promise<string> {
   console.log();
-  taskerMessage(
-    "Please enter the number of task or press enter to continue with selected task",
-    false,
-  );
+  /*  taskerMessage(
+      "Please enter the number of task or press enter to continue with selected task",
+      false,
+    );*/
   const taskNumberAnswer: string = await waitUserInputAsync((ans: string): boolean => {
     const taskNumber: number = Number(ans);
     return (
