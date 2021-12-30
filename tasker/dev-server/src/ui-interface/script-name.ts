@@ -2,7 +2,7 @@ import { updateEnv } from "../helpers/update-env";
 import { config } from "../config/config";
 import inquirer from "inquirer";
 
-export async function waitScriptNameUpdateAsync(): Promise<void> {
+export async function waitScriptNameAsync(): Promise<void> {
   let { scriptName } = await inquirer.prompt([
     {
       type: "input",

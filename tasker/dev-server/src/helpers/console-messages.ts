@@ -16,10 +16,3 @@ export function taskerMessage(message: string, needNewEmptyLine: boolean = true)
     console.log();
   }
 }
-
-export function highlightMessage(message: string, needNewEmptyLine: boolean = true) {
-  console.log("\x1b[33m", message, "\x1b[0m");
-  if (needNewEmptyLine) {
-    console.log();
-  }
-}

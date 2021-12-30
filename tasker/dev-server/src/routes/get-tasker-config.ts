@@ -1,8 +1,8 @@
 import { Router } from "express";
 import events from "events";
-import { sendMessageToTasker } from "../message-sender/message-to-tasker";
-import { CONNECTION_TIMEOUT } from "../config/config";
-import { errorMessage } from "../helpers/messages";
+import { sendMessageToTasker } from "../message-handlers/message-to-tasker";
+import { connectionTimeout } from "../config/config";
+import { errorMessage } from "../helpers/console-messages";
 
 export const taskerConfigRouter = Router();
 
@@ -29,7 +29,7 @@ export async function waitTaskerConfigAsync(): Promise<string> {
         errorMessage("Tasker config request failed");
         reject();
       }
-    }, CONNECTION_TIMEOUT);
+    }, connectionTimeout);
   });
 }
 

@@ -6,7 +6,7 @@ import env from "dotenv";
 env.config();
 const PORT = Number(process.env.WEBPACK_SERVER_PORT?.trim() || 8000);
 
-export function sendMessageReadyToWebpack() {
+export function sendConfigToWebpack() {
   const options = {
     hostname: "localhost",
     port: PORT,

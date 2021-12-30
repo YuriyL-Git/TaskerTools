@@ -4,6 +4,7 @@ import env from "dotenv";
 import http from "http";
 import { fileURLToPath } from "url";
 import { config } from "../webpack.config.js";
+import { errorMessage, successMessage } from "./messages.js";
 
 env.config();
 
@@ -12,7 +13,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export function postBuilder() {
   const scriptName = config.scriptName;
-  
+
   setTimeout(async () => {
     await updateBuildFileAsync(scriptName);
     messageToTaskerScriptReady(scriptName);
@@ -113,14 +114,4 @@ function messageToTaskerScriptReady(scriptName) {
   http.get(taskerAddress + "scriptready=" + scriptName).on("error", (err) => {
     errorMessage("Error: " + err.message);
   });
-}
-
-function errorMessage(message) {
-  console.log("\x1b[31m", message);
-  console.log("\x1b[0m", "");
-}
-
-function successMessage(message) {
-  console.log("\x1b[32m", message);
-  console.log("\x1b[0m", "");
 }

@@ -1,31 +1,19 @@
 import http from "http";
-import dotenv from "dotenv";
-import { errorMessage, taskerMessage } from "../helpers/messages";
-import { config, ENV_PATH, IConfig } from "../config/config";
 import find from "local-devices";
+import { config } from "../config/config";
+import { errorMessage, taskerMessage } from "../helpers/console-messages";
 import { updateEnv } from "../helpers/update-env";
-
-dotenv.config({ path: ENV_PATH });
+import { sendMessageToTasker } from "../message-handlers/message-to-tasker";
+import { getTaskerAddress } from "../helpers/get-tasker-address";
 
 const connectionTimeout = Number(process.env.CONNECTION_TIMEOUT || "10000");
-let taskerAddress: string = getTaskerAddress(config);
 
-function getTaskerAddress(config: IConfig): string {
-  return `http://${config.taskerIp}:${config.taskerPort}/?`;
-}
-
-export function sendMessageToTasker(prefix: string, message: string) {
-  http
-    .get(taskerAddress + prefix + "=" + message, (result) => {})
-    .on("error", (err) => {
-      errorMessage("Error: " + err.message);
-    });
-}
-
-export async function setupConnection(hostaddress: string): Promise<void> {
+export async function setupConnection(): Promise<void> {
   const networkDevices: Array<{ ip: string }> = [];
+  let taskerAddress: string = getTaskerAddress(config);
+
   let isConnected: boolean = false;
-  let isTimeOut: boolean = false;
+  let timeIsOut: boolean = false;
 
   do {
     try {
@@ -48,7 +36,7 @@ export async function setupConnection(hostaddress: string): Promise<void> {
       networkDevices.push(...(await find()));
 
       setTimeout(() => {
-        isTimeOut = true;
+        timeIsOut = true;
       }, connectionTimeout);
     }
 
@@ -59,10 +47,10 @@ export async function setupConnection(hostaddress: string): Promise<void> {
     taskerMessage(
       "Trying to connect to tasker server by address " + taskerAddress.replace("/?", "") + " ...",
     );
-  } while (!isConnected || isTimeOut);
+  } while (!isConnected || timeIsOut);
 
   if (isConnected) {
-    sendMessageToTasker("hostaddress", hostaddress);
+    sendMessageToTasker("hostaddress", config.devServerAddress);
 
     if (config.taskerIp !== process.env.TASKER_IP?.trim()) {
       updateEnv("TASKER_IP", config.taskerIp);

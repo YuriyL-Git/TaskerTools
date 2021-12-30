@@ -1,1 +1,2 @@
-console.log("testing new2");
+console.log("testing new tests");
+toast("bla");

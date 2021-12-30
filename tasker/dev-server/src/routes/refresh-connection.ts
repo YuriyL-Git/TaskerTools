@@ -1,9 +1,8 @@
 import events from "events";
-import { setupConnection } from "../message-sender/message-to-tasker";
 import { Router } from "express";
-import { CONNECTION_TIMEOUT } from "../config/config";
-import { errorMessage, successMessage, taskerMessage } from "../helpers/messages";
-import { processInputDataAsync } from "../process-data/process-input-data";
+import { connectionTimeout } from "../config/config";
+import { errorMessage, successMessage, taskerMessage } from "../helpers/console-messages";
+import { setupConnection } from "../setup-connection/setup-connection";
 
 export const connectionRouter = Router();
 
@@ -12,23 +11,17 @@ const connectionEvent: string = "connected";
 
 let taskerDataResponse: string = "";
 
-export async function refreshConnectionAsync(
-  hostAddress: string,
-  isFirstStart = false,
-): Promise<void> {
+export async function refreshConnectionAsync(): Promise<string> {
   let isConnectionSuccessFull = false;
 
-  await new Promise<void>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     function onSuccess() {
-      if (isFirstStart) {
-        successMessage("Node server connected to your tasker application");
-      }
       isConnectionSuccessFull = true;
-      resolve();
+      resolve(taskerDataResponse);
     }
 
     connectionEmitter.once(connectionEvent, onSuccess);
-    setupConnection(hostAddress);
+    setupConnection();
 
     setTimeout(() => {
       if (!isConnectionSuccessFull) {
@@ -37,10 +30,8 @@ export async function refreshConnectionAsync(
         taskerMessage("Check tasker if tasker network plugin is started");
         reject();
       }
-    }, CONNECTION_TIMEOUT);
+    }, connectionTimeout);
   });
-
-  await processInputDataAsync(taskerDataResponse);
 }
 
 connectionRouter.get("/setupconnection", async (req, res) => {

@@ -4,8 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/main.ts",
-    "node": "npx ts-node src/main.ts",
+    "start": "npx ts-node src/main.ts",
+    "dev": "nodemon --exec ts-node src/main.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "build": "tsc -p ."
@@ -20,8 +20,7 @@
     "fs": "*",
     "ip": "^1.1.5",
     "local-devices": "^3.2.0",
-    "path": "^0.12.7",
-    "tsconfig-paths": "^3.12.0"
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@types/express": "^4.17.8",

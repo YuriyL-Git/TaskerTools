@@ -1,5 +1,6 @@
 import http from "http";
 import env from "dotenv";
+import { successMessage } from "./messages.js";
 
 env.config();
 const PORT = Number(process.env.WEBPACK_SERVER_PORT?.trim() || 8000);
@@ -10,10 +11,10 @@ export default async function waitConfigFromServerAsync() {
 
   const requestListener = function (req, res) {
     if (req.url.includes("tasker-server-ready")) {
-      config = parceMessage(req.url.split("?")[1]);
+      config = parseResponse(req.url.split("?")[1]);
       shouldContinue = true;
 
-      console.log("\x1b[32m", "Dev server is ready \n", "\x1b[0m");
+      successMessage("Dev server is ready \n");
       res.end("success");
     } else {
       res.end("wrong request");
@@ -36,7 +37,7 @@ export default async function waitConfigFromServerAsync() {
   });
 }
 
-function parceMessage(message) {
+function parseResponse(message) {
   return message.split("&").reduce((acc, curr) => {
     const [key, value] = curr.split("=");
     return {
