@@ -1,19 +1,18 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import env from "dotenv";
 import http from "http";
+import { fileURLToPath } from "url";
+import { config } from "../webpack.config.js";
 
 env.config();
+
 const isDevelopment = Boolean(process.env.IS_DEVELOPMENT.trim());
-const isAutoJs = process.env.IS_AUTOJS.trim() === "true";
-
-const taskerAddress = `http://${process.env.TASKER_IP.trim()}:${process.env.TASKER_PORT.trim()}/?`;
-const devServerAddress = `http://${process.env.DEV_SERVER_ADDRESS}`;
-
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-export function postBuilder(scriptName) {
+export function postBuilder() {
+  const scriptName = config.scriptName;
+  
   setTimeout(async () => {
     await updateBuildFileAsync(scriptName);
     messageToTaskerScriptReady(scriptName);
@@ -92,6 +91,8 @@ async function getLocalsDeclarations() {
 }
 
 function getConsoleLogFunc() {
+  const devServerAddress = `http://${config.devServerAddress}`;
+
   const requestUrlContent = `const requestUrl = '${devServerAddress}/consolelog';`;
   const taskerContent =
     "console.log = function(...args) {const data = new FormData(); data.append('message', args.join(''));" +
@@ -101,17 +102,17 @@ function getConsoleLogFunc() {
  const options = {headers: { 'Content-Type': 'application/x-www-form-urlencoded' },body: message};` +
     `$http.post(requestUrl, options);` +
     "sleep(1);};";
-  console.log("IS AUTO JS", isAutoJs);
-  const functionContent = isAutoJs ? autoJsFuncContent : taskerContent;
+
+  const functionContent = config.isAutoJs ? autoJsFuncContent : taskerContent;
   return [requestUrlContent, functionContent].join("\n");
 }
 
 function messageToTaskerScriptReady(scriptName) {
-  http
-    .get(taskerAddress + "scriptready=" + scriptName, (result) => {})
-    .on("error", (err) => {
-      errorMessage("Error: " + err.message);
-    });
+  const taskerAddress = `http://${config.taskerIp}:${config.taskerPort}/?`;
+
+  http.get(taskerAddress + "scriptready=" + scriptName).on("error", (err) => {
+    errorMessage("Error: " + err.message);
+  });
 }
 
 function errorMessage(message) {

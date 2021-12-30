@@ -1,4 +1,1 @@
-import { locals, tk } from "tasker";
-
-tk.flash(locals.takka);
-//
+console.log("testing new2");

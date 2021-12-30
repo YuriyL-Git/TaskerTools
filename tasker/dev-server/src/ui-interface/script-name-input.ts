@@ -1,22 +1,25 @@
-import { waitUserInputAsync } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
 import { config } from "../config/config";
+import inquirer from "inquirer";
 
 export async function waitScriptNameUpdateAsync(): Promise<void> {
-  console.log(
-    "\x1b[34m",
-    "Please enter desired script name or press enter to continue with script name -> ",
-    "\x1b[33m",
-    config.scriptName,
-    "\x1b[0m",
-  );
-  let scriptName: string = await waitUserInputAsync((ans: string): boolean => {
-    return (
-      (config.scriptName.length > 0 && ans.length === 0) || (ans.endsWith(".js") && ans.length > 3)
-    );
-  });
+  let { scriptName } = await inquirer.prompt([
+    {
+      type: "input",
+      name: "scriptName",
+      message: "Please enter desired script name or press enter to continue current script name",
+      validate(inputValue) {
+        if (inputValue.endsWith(".js") && inputValue.length > 3) {
+          return true;
+        } else {
+          return "Enter valid script name. Should have extension '*.js'";
+        }
+      },
+      default: config.scriptName,
+    },
+  ]);
 
-  if (scriptName.length > 0) {
+  if (scriptName !== config.scriptName) {
     config.scriptName = scriptName;
     updateEnv("SCRIPT_FILE_NAME", scriptName);
   }

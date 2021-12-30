@@ -14,7 +14,7 @@ export async function waitTaskNameUpdateAsync(tasks: string[]): Promise<void> {
       type: "list",
       pageSize: 25,
       name: "taskName",
-      message: "Select task name \n",
+      message: "Select task name",
       choices: tasksToPrint,
       default: defaultTask,
     },
