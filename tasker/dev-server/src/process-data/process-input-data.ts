@@ -1,21 +1,21 @@
-import dotenv from "dotenv";
 import { waitUserInputAsync } from "../helpers/wait-user-input";
 import { updateEnv } from "../helpers/update-env";
-import { taskerMessage } from "../helpers/messages";
 import { waitTaskerConfigAsync } from "../routes/get-tasker-config";
-import { ENV_PATH } from "../config/config";
+import { config } from "../config/config";
 import { updateTypes } from "../update-types/update-types";
 import { sendMessageReadyToWebpack } from "../message-sender/message-to-webpack";
-import { waitTaskName } from "../ui-interface/task-name-menu";
+import { waitTaskNameUpdateAsync } from "../ui-interface/task-name-menu";
+import { waitScriptNameUpdateAsync } from "../ui-interface/script-name-input";
 
-dotenv.config({ path: ENV_PATH });
+/*dotenv.config({ path: ENV_PATH });*/
 
-const savedTaskName: string = (process.env.TASK_NAME || "").toUpperCase().trim();
+/*
 const savedScriptName: string = (process.env.SCRIPT_FILE_NAME || "").trim();
 
 export const scriptData: { name: string } = {
   name: savedScriptName,
 };
+*/
 
 interface TaskerData {
   response: string;
@@ -29,25 +29,17 @@ export async function processInputDataAsync(taskerResponse: string): Promise<voi
   const tasks: string[] = taskerData.tasks.split(",");
   const globals: string[] = taskerData.globals.split(",").map((global) => global.replace("%", ""));
 
-  const savedTaskNumber: number = getSavedTaskNumber(tasks);
-  const taskName: string = await waitTaskName(tasks, savedTaskNumber);
-  updateEnv("TASK_NAME", taskName);
-  console.log("SELECTED TASK =", taskName);
-
-  //printTasksList(tasks, savedTaskNumber);
-
-  //const currTaskName: string = await waitTaskNameAsync(tasks, savedTaskNumber);
-  const scriptName: string = await waitScriptNameAsync();
+  await waitTaskNameUpdateAsync(tasks);
+  await waitScriptNameUpdateAsync();
   const configData: string = await waitTaskerConfigAsync();
 
-  const locals: string[] = getLocals(configData, taskName);
+  const locals: string[] = getLocals(configData, config.taskName);
 
   updateTypes(globals, locals);
-  scriptData.name = scriptName;
-  sendMessageReadyToWebpack(scriptName);
+  sendMessageReadyToWebpack();
 }
 
-function printTasksList(tasks: string[], savedTaskIndex: number): void {
+/*function printTasksList(tasks: string[], savedTaskIndex: number): void {
   tasks.forEach((task, index) => {
     const spacesNumber: number = Math.floor(tasks.length / 10) - Math.floor((index + 1) / 10);
     const taskToPrint: string = `${index + 1}. ` + " ".repeat(spacesNumber) + task;
@@ -60,20 +52,12 @@ function printTasksList(tasks: string[], savedTaskIndex: number): void {
   });
 }
 
-function getSavedTaskNumber(tasks: string[]): number {
-  let savedTaskNumber: number = tasks.map((task) => task.toUpperCase()).indexOf(savedTaskName);
-  if (savedTaskNumber === -1) {
-    savedTaskNumber = 0;
-  }
-  return savedTaskNumber;
-}
-
 async function waitTaskNameAsync(tasks: string[], savedTaskNumber: number): Promise<string> {
   console.log();
-  /*  taskerMessage(
+  /!*  taskerMessage(
       "Please enter the number of task or press enter to continue with selected task",
       false,
-    );*/
+    );*!/
   const taskNumberAnswer: string = await waitUserInputAsync((ans: string): boolean => {
     const taskNumber: number = Number(ans);
     return (
@@ -89,29 +73,7 @@ async function waitTaskNameAsync(tasks: string[], savedTaskNumber: number): Prom
     updateEnv("TASK_NAME", currTaskName);
   }
   return currTaskName;
-}
-
-async function waitScriptNameAsync(): Promise<string> {
-  console.log(
-    "\x1b[34m",
-    "Please enter desired script name or press enter to continue with script name -> ",
-    "\x1b[33m",
-    savedScriptName,
-    "\x1b[0m",
-  );
-  let scriptName: string = await waitUserInputAsync((ans: string): boolean => {
-    return (
-      (savedScriptName.length > 0 && ans.length === 0) || (ans.endsWith(".js") && ans.length > 3)
-    );
-  });
-
-  if (scriptName.length === 0) {
-    scriptName = savedScriptName;
-  }
-  updateEnv("SCRIPT_FILE_NAME", scriptName);
-
-  return scriptName;
-}
+}*/
 
 function getLocals(configData: string, taskName: string): string[] {
   const sectionRegex: RegExp = new RegExp(`<nme>${taskName}<\/nme>(.*?)<\/Task>`);

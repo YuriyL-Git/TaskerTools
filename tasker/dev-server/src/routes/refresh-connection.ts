@@ -1,5 +1,5 @@
-import { sendMessageToTasker, setupConnection } from "../message-sender/message-to-tasker";
-import { connectionEmitter } from "../main";
+import events from "events";
+import { setupConnection } from "../message-sender/message-to-tasker";
 import { Router } from "express";
 import { CONNECTION_TIMEOUT } from "../config/config";
 import { errorMessage, successMessage, taskerMessage } from "../helpers/messages";
@@ -7,7 +7,9 @@ import { processInputDataAsync } from "../process-data/process-input-data";
 
 export const connectionRouter = Router();
 
+const connectionEmitter = new events.EventEmitter();
 const connectionEvent: string = "connected";
+
 let taskerDataResponse: string = "";
 
 export async function refreshConnectionAsync(
@@ -45,6 +47,7 @@ connectionRouter.get("/setupconnection", async (req, res) => {
   if (connectionEmitter.listenerCount(connectionEvent) > 0 && req.query?.response === "success") {
     taskerDataResponse = JSON.stringify(req.query);
     connectionEmitter.emit(connectionEvent);
+
     res.send("success");
   } else {
     res.send("fail");

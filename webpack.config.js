@@ -11,7 +11,7 @@ export default {
   mode: "production",
   entry: "./src/index.ts",
   optimization: {
-    minimize: false,
+    minimize: true,
   },
   output: {
     path: path.resolve(__dirname, "dist"),

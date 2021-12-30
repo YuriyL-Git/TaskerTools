@@ -1,2 +1,4 @@
-console.log("test", 2, "test 3");
+import { locals, tk } from "tasker";
+
+tk.flash(locals.takka);
 //
