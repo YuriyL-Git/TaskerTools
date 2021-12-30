@@ -4,14 +4,18 @@
     "target": "ES6",
     "module": "CommonJS",
     "lib": [
-      "esnext",
-      "dom"
+      "esnext"
     ],
     "declaration": false,
     "sourceMap": false,
     "outDir": "./dist",
     "strict": true,
     "moduleResolution": "node",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@autojs/",
+      "./node_modules/@autojs/types-pro9"
+    ],
     "paths": {
       "tasker": [
         "./tasker"

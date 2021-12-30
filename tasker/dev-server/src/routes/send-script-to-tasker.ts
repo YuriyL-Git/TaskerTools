@@ -1,9 +1,9 @@
 import { Router } from "express";
 import path from "path";
-import { scriptData } from "../process-data/process-input-data";
+import { config } from "../config/config";
 
 function getScriptPath(): string {
-  return path.resolve(__dirname, "../../../../dist/" + scriptData.name);
+  return path.resolve(__dirname, "../../../../dist/" + config.scriptName);
 }
 
 export const sendScriptRouter = Router();

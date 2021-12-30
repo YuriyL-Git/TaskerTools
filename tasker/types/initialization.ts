@@ -1,5 +1,5 @@
 import { LocalsDeclaration } from "declarations";
-import { ITaskerLocals } from "./custom-types/custom-types";
+import { ITaskerLocals } from "./custom-types";
 
 //@ts-ignore
 const taskerLocals: ITaskerLocals = {};
