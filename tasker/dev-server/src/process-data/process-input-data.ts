@@ -1,10 +1,7 @@
 import { waitTaskerConfigAsync } from "../routes/get-tasker-config";
 import { config } from "../config/config";
 import { updateTypes } from "../update-types/update-types";
-import { sendMessageReadyToWebpack } from "../message-sender/message-to-webpack";
-import { waitTaskNameUpdateAsync } from "../ui-interface/task-name-menu";
-import { waitScriptNameUpdateAsync } from "../ui-interface/script-name-input";
-import { waitScriptTypeUpdateAsync } from "../ui-interface/script-type";
+import { waitUserInputs } from "../ui-interface/wait-user-inputs";
 
 interface TaskerData {
   response: string;
@@ -12,17 +9,14 @@ interface TaskerData {
   tasks: string;
 }
 
-export async function processInputDataAsync(taskerResponse: string): Promise<void> {
+export async function processTaskerResponse(taskerResponse: string): Promise<void> {
   const taskerData: TaskerData = JSON.parse(taskerResponse) as TaskerData;
 
   const tasks: string[] = taskerData.tasks.split(",");
   const globals: string[] = taskerData.globals.split(",").map((global) => global.replace("%", ""));
 
-  await waitScriptTypeUpdateAsync();
-  await waitTaskNameUpdateAsync(tasks);
-  await waitScriptNameUpdateAsync();
+  await waitUserInputs(tasks);
   const configData: string = await waitTaskerConfigAsync();
-
   const locals: string[] = getLocals(configData, config.taskName);
 
   updateTypes(globals, locals);

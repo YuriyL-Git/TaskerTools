@@ -5,7 +5,7 @@ import { updateEnv } from "../helpers/update-env";
 
 dotenv.config({ path: ENV_PATH });
 
-export async function waitTaskNameUpdateAsync(tasks: string[]): Promise<void> {
+export async function waitTaskNameAsync(tasks: string[]): Promise<void> {
   const tasksToPrint: string[] = tasks.map((task, index) => ++index + " " + task);
 
   const defaultTask: number = getSavedTaskNumber(tasks);
