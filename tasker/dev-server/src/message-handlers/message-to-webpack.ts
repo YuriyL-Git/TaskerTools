@@ -1,7 +1,6 @@
-import { config } from "../config/config";
-
 const http = require("http");
 import env from "dotenv";
+import { getConfigString } from "../helpers/get-config-string";
 
 env.config();
 const PORT = Number(process.env.WEBPACK_SERVER_PORT?.trim() || 8000);
@@ -16,12 +15,4 @@ export function sendConfigToWebpack() {
 
   const req = http.request(options, () => {});
   req.end();
-}
-
-function getConfigString(): string {
-  return Object.entries(config)
-    .reduce((acc, [key, value]) => {
-      return `${acc}&${key}=${value}`;
-    }, "")
-    .replace(/&/, "");
 }

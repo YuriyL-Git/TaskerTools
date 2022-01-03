@@ -10,6 +10,7 @@ import { logToConsoleRouter } from "./routes/log-to-console";
 import { sendConfigToWebpack } from "./message-handlers/message-to-webpack";
 import { config } from "./config/config";
 import { processTaskerResponse } from "./process-data/process-input-data";
+import { sendConfigToTaskerRouter } from "./routes/send-config-to-tasker";
 
 dotenv.config({ path: "../.env" });
 
@@ -26,7 +27,13 @@ app.use(
     extended: false,
   }),
 );
-app.use("/", [connectionRouter, taskerConfigRouter, sendScriptRouter, logToConsoleRouter]);
+app.use("/", [
+  connectionRouter,
+  taskerConfigRouter,
+  sendScriptRouter,
+  logToConsoleRouter,
+  sendConfigToTaskerRouter,
+]);
 
 app.listen(port, hostIp, () => {
   console.log("\n Server started on address: ", config.devServerAddress);

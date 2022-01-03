@@ -10,7 +10,7 @@ export async function waitIsAutoRestartAsync(): Promise<void> {
       type: "list",
       pageSize: 2,
       name: "isAutoRestartResult",
-      message: "Turn on script auto restart  on save?",
+      message: "Auto restart  on save?",
       choices: ["Yes", "No"],
       default: defaultItemNumber,
     },
